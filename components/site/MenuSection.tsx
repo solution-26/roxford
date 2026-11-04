@@ -2,8 +2,9 @@
 
 import Image from "next/image";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
-import { Star } from "lucide-react";
 import { useMemo, useState } from "react";
+import { CheesePull, CheeseWedge } from "./Cheese";
+import { SplitText } from "./SplitText";
 import { formatAmount, formatPrice } from "@/lib/hours";
 import type { Category, Product } from "@/lib/types";
 
@@ -105,15 +106,13 @@ export function MenuSection({
           >
             La carte
           </motion.p>
-          <motion.h2
-            className="mx-auto mt-5 max-w-2xl font-display text-[clamp(2.2rem,5.5vw,3.6rem)] font-semibold leading-[1.05] tracking-[-0.03em] text-ink"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.65, delay: 0.08, ease }}
-          >
-            Tout est préparé minute
-          </motion.h2>
+          <h2 className="mx-auto mt-5 max-w-2xl font-display text-[clamp(2.2rem,5.5vw,3.6rem)] font-semibold leading-[1.05] tracking-[-0.03em] text-ink">
+            <SplitText
+              text="Tout est préparé minute"
+              highlight={["minute"]}
+              delay={0.08}
+            />
+          </h2>
           <motion.div
             className="rule-brass mx-auto mt-8 h-px w-40"
             initial={{ scaleX: 0 }}
@@ -262,7 +261,11 @@ function Dish({
 }) {
   return (
     <motion.article
-      className="group relative flex items-start gap-4 rounded-2xl px-4 py-4 transition-colors duration-300 hover:bg-cream"
+      // Sans description, la ligne se resserre : on reste proche de la
+      // densité d'une carte imprimée.
+      className={`group relative flex items-start gap-4 rounded-2xl px-4 transition-colors duration-300 hover:bg-cream ${
+        item.description || item.image_url ? "py-3.5" : "py-2"
+      }`}
       initial={reduced ? false : { opacity: 0, y: 18 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-40px" }}
@@ -290,11 +293,13 @@ function Dish({
 
           {item.is_featured && (
             <span
-              className="inline-flex shrink-0 items-center gap-1 rounded-full bg-brass/15 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-walnut"
+              className="relative inline-flex shrink-0 items-center gap-1 rounded-full bg-cheese/20 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-cheese-deep"
               title="Spécialité de la maison"
             >
-              <Star size={9} fill="currentColor" strokeWidth={0} />
+              <CheeseWedge size={11} className="text-cheese-deep" />
               Signature
+              {/* Filaments de fromage au survol du plat */}
+              <CheesePull />
             </span>
           )}
 

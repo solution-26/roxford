@@ -1,16 +1,20 @@
 import type { Category, GalleryImage, Product, SiteSettings } from "./types";
 
 /**
- * Contenu de repli, identique au seed SQL (supabase/migrations/0001_init.sql).
+ * Contenu de repli, identique au seed SQL
+ * (supabase/migrations/0001_init.sql + 0003_menu_reel.sql).
  *
  * Il sert dans deux cas :
- *  1. les variables Supabase ne sont pas encore renseignées ;
+ *  1. les variables Supabase ne sont pas renseignées ;
  *  2. la base est joignable mais encore vide.
  *
- * ⚠️ Menu PROVISOIRE : la page Facebook de Roxford est protégée par un mur
- * de connexion, les plats et prix réels n'ont pas pu être récupérés. Les
- * tarifs respectent la fourchette 10–20 DT annoncée et sont tous modifiables
- * depuis /admin.
+ * CARTE RÉELLE, relevée sur le panneau-menu du restaurant.
+ * Aucune description n'est inventée : le panneau n'en porte pas, les plats
+ * s'affichent donc en nom + prix, comme sur la carte imprimée. Le
+ * propriétaire peut en ajouter depuis /admin.
+ *
+ * Six prix restent incertains (photo en 460×614, chiffres à la limite de
+ * lisibilité) — ils sont marqués « ⚠ à vérifier » dans 0003_menu_reel.sql.
  */
 
 export const seedSettings: SiteSettings = {
@@ -18,7 +22,7 @@ export const seedSettings: SiteSettings = {
   restaurant_name: "Roxford",
   tagline: "Restaurant · Fast Food & More",
   description:
-    "Au cœur de Nabeul, Roxford vous accueille dans une salle à l'esprit marin — boiseries chaudes, hublots de laiton et aquariums — pour une cuisine généreuse servie du midi jusque tard le soir.",
+    "Au cœur de Nabeul, Roxford fait du fromage sa signature : pizzas gratinées, sandwichs fondants et gratins généreux, servis dans une salle à l'esprit marin — boiseries chaudes, hublots de laiton et aquariums.",
   logo_url: null,
   hero_image_url: "/photos/salle-3.png",
   phone: "53 288 222",
@@ -30,13 +34,13 @@ export const seedSettings: SiteSettings = {
   price_range: "10–20 DT",
   currency: "DT",
   hours: [
-    { day: "Lundi", open: "11:00", close: "23:00", closed: false },
-    { day: "Mardi", open: "11:00", close: "23:00", closed: false },
-    { day: "Mercredi", open: "11:00", close: "23:00", closed: false },
-    { day: "Jeudi", open: "11:00", close: "23:00", closed: false },
-    { day: "Vendredi", open: "11:00", close: "23:00", closed: false },
-    { day: "Samedi", open: "11:00", close: "23:00", closed: false },
-    { day: "Dimanche", open: "11:00", close: "23:00", closed: false },
+    { day: "Lundi", open: "10:00", close: "23:00", closed: false },
+    { day: "Mardi", open: "10:00", close: "23:00", closed: false },
+    { day: "Mercredi", open: "10:00", close: "23:00", closed: false },
+    { day: "Jeudi", open: "10:00", close: "23:00", closed: false },
+    { day: "Vendredi", open: "10:00", close: "23:00", closed: false },
+    { day: "Samedi", open: "10:00", close: "23:00", closed: false },
+    { day: "Dimanche", open: "10:00", close: "23:00", closed: false },
   ],
   features: [
     "Terrasse",
@@ -47,84 +51,108 @@ export const seedSettings: SiteSettings = {
   accent_color: "#2E7D7B",
 };
 
-type SeedCategory = Omit<Category, "id"> & { id: string };
-
-export const seedCategories: SeedCategory[] = [
-  { id: "entrees", slug: "entrees", name: "Entrées & Salades", description: "Pour commencer en fraîcheur", icon: "salad", sort_order: 10, is_active: true },
-  { id: "sandwichs", slug: "sandwichs", name: "Sandwichs", description: "Préparés minute, pain frais du jour", icon: "sandwich", sort_order: 20, is_active: true },
-  { id: "burgers", slug: "burgers", name: "Burgers", description: "Steak haché maison et sauces signature", icon: "burger", sort_order: 30, is_active: true },
-  { id: "tacos", slug: "tacos", name: "Tacos", description: "Généreux, gratinés, à composer", icon: "wrap", sort_order: 40, is_active: true },
-  { id: "pizzas", slug: "pizzas", name: "Pizzas", description: "Pâte fine, cuisson au four", icon: "pizza", sort_order: 50, is_active: true },
-  { id: "pates", slug: "pates", name: "Pâtes & Plats", description: "Les classiques de la maison", icon: "pasta", sort_order: 60, is_active: true },
-  { id: "desserts", slug: "desserts", name: "Desserts", description: "La touche sucrée", icon: "dessert", sort_order: 70, is_active: true },
-  { id: "boissons", slug: "boissons", name: "Boissons", description: "Fraîches et chaudes", icon: "drink", sort_order: 80, is_active: true },
+export const seedCategories: Category[] = [
+  { id: "sand-maqloub", slug: "sand-maqloub", name: "Sand. Ma9loub", description: "Grillé et garni minute", icon: "sandwich", sort_order: 10, is_active: true },
+  { id: "pain-cornet", slug: "pain-cornet", name: "Pain Cornet", description: "Le classique de la maison", icon: "sandwich", sort_order: 20, is_active: true },
+  { id: "baguette-farcie", slug: "baguette-farcie", name: "Baguette Farcie", description: "Pain frais, garniture généreuse", icon: "sandwich", sort_order: 30, is_active: true },
+  { id: "sand-roxford", slug: "sand-roxford", name: "Sand. Roxford", description: "Nos créations maison", icon: "burger", sort_order: 40, is_active: true },
+  { id: "pizzas", slug: "pizzas", name: "Pizzas", description: "Pâte fine, gratinées au four", icon: "pizza", sort_order: 50, is_active: true },
+  { id: "plats", slug: "plats", name: "Plats", description: "Pâtes, poissons et salades", icon: "pasta", sort_order: 60, is_active: true },
 ];
 
-const raw: Array<
-  [string, string, string, number, boolean, number]
-> = [
-  ["entrees", "Salade César", "Laitue croquante, poulet grillé, copeaux de parmesan, sauce César", 11, false, 10],
-  ["entrees", "Salade Niçoise", "Thon, œuf, olives, tomate, pommes de terre", 10.5, false, 20],
-  ["entrees", "Salade Roxford", "Crevettes, avocat, agrumes et vinaigrette maison", 14, true, 30],
-  ["entrees", "Chorba", "Soupe traditionnelle du jour", 5, false, 40],
-  ["entrees", "Bricks à l'œuf", "Feuille de brick croustillante, thon, câpres", 4.5, false, 50],
+/** [catégorie, nom, prix, en vedette] — pour les plats à prix unique. */
+const simple: Array<[string, string, number, boolean]> = [
+  // ----- Sand. Ma9loub -----
+  ["sand-maqloub", "Jambon", 4.2, false],
+  ["sand-maqloub", "Thon", 4.2, false],
+  ["sand-maqloub", "Escalope grillée", 4.8, false],
+  ["sand-maqloub", "Escalope panée", 5.0, false],
+  ["sand-maqloub", "Viande hachée", 5.5, false],
 
-  ["sandwichs", "Sandwich Thon", "Thon, harissa, olives, œuf, salade méchouia", 8, false, 10],
-  ["sandwichs", "Sandwich Escalope", "Escalope de poulet panée, crudités, sauce au choix", 9.5, false, 20],
-  ["sandwichs", "Sandwich Viande Hachée", "Viande hachée épicée, fromage fondu, frites", 11, false, 30],
-  ["sandwichs", "Chapati Poulet", "Pain chapati moelleux, poulet mariné, sauce fromagère", 10, true, 40],
-  ["sandwichs", "Makloub Mixte", "Poulet et viande, fromage, légumes grillés", 12.5, false, 50],
+  // ----- Pain Cornet -----
+  ["pain-cornet", "Jambon", 4.2, false],
+  ["pain-cornet", "Thon", 4.5, false],
+  ["pain-cornet", "Escalope grillée", 5.0, false],
+  ["pain-cornet", "Escalope panée", 5.2, false],
+  ["pain-cornet", "Viande hachée", 5.8, false],
 
-  ["burgers", "Classic Burger", "Steak haché, cheddar, salade, tomate, oignon, sauce burger", 12, false, 10],
-  ["burgers", "Double Cheese", "Deux steaks, double cheddar, cornichons", 16, true, 20],
-  ["burgers", "Chicken Crispy", "Poulet croustillant, coleslaw, sauce épicée", 13, false, 30],
-  ["burgers", "Roxford Signature", "Steak, bacon de dinde, cheddar, oignons confits, sauce maison", 18, true, 40],
-  ["burgers", "Veggie Burger", "Galette de légumes, fromage, roquette", 11, false, 50],
+  // ----- Baguette Farcie -----
+  ["baguette-farcie", "Jambon", 4.5, false],
+  ["baguette-farcie", "Thon", 4.8, false],
+  ["baguette-farcie", "Escalope grillée", 5.5, false],
+  ["baguette-farcie", "Escalope panée", 5.8, false],
+  ["baguette-farcie", "Viande hachée", 6.0, false],
 
-  ["tacos", "Tacos 1 Viande", "Viande au choix, frites, sauce fromagère, gratiné", 11, false, 10],
-  ["tacos", "Tacos 2 Viandes", "Deux viandes au choix, frites, sauce fromagère", 14, true, 20],
-  ["tacos", "Tacos 3 Viandes", "Trio de viandes pour les grandes faims", 17, false, 30],
-  ["tacos", "Tacos Crevettes", "Crevettes sautées, sauce algérienne, gratiné", 16, false, 40],
+  // ----- Sand. Roxford (Home Made) -----
+  ["sand-roxford", "Le Charcutier", 4.5, false],
+  ["sand-roxford", "The Buffalo Chicken", 5.0, false],
+  ["sand-roxford", "Kentucky Fried", 5.2, false],
+  ["sand-roxford", "Meat Lovers", 5.5, true],
+  ["sand-roxford", "Cordon Bleu", 5.5, true],
+  ["sand-roxford", "The Bold", 6.5, true],
 
-  ["pizzas", "Margherita", "Sauce tomate, mozzarella, basilic", 9, false, 10],
-  ["pizzas", "Quatre Fromages", "Mozzarella, gorgonzola, chèvre, parmesan", 14, false, 20],
-  ["pizzas", "Thon & Câpres", "Sauce tomate, thon, oignons, olives, câpres", 13, false, 30],
-  ["pizzas", "Fruits de Mer", "Crevettes, calamars, moules, ail et persil", 18, true, 40],
-  ["pizzas", "Pizza Roxford", "Viande hachée, merguez, poivrons, œuf", 16, false, 50],
-
-  ["pates", "Spaghetti Bolognaise", "Sauce bolognaise mijotée, parmesan", 12, false, 10],
-  ["pates", "Penne Quatre Fromages", "Crème de fromages, poivre noir", 13, false, 20],
-  ["pates", "Linguine Fruits de Mer", "Crevettes, calamars, tomates cerises, ail", 19, true, 30],
-  ["pates", "Escalope Milanaise", "Escalope panée, spaghetti, sauce tomate", 15, false, 40],
-  ["pates", "Grillade Mixte", "Côtelettes, merguez, escalope, frites et salade", 20, false, 50],
-
-  ["desserts", "Tiramisu", "Mascarpone, café, cacao", 6.5, false, 10],
-  ["desserts", "Fondant au Chocolat", "Cœur coulant, glace vanille", 7, true, 20],
-  ["desserts", "Crème Brûlée", "Vanille de Madagascar, caramel croquant", 6.5, false, 30],
-  ["desserts", "Salade de Fruits", "Fruits frais de saison", 5.5, false, 40],
-
-  ["boissons", "Eau Minérale 50cl", "Plate ou gazeuse", 1.5, false, 10],
-  ["boissons", "Soda", "Coca-Cola, Fanta, Sprite, Boga", 3, false, 20],
-  ["boissons", "Jus Pressé", "Orange, citronnade ou fraise selon saison", 6, true, 30],
-  ["boissons", "Café Express", "Torréfaction maison", 2.5, false, 40],
-  ["boissons", "Thé aux Pignons", "Thé à la menthe et pignons de pin", 4, false, 50],
+  // ----- Plats -----
+  ["plats", "Escalope grillée ou panée", 9.5, false],
+  ["plats", "Escalope sauce aux champignons", 12.0, false],
+  ["plats", "Émincé de volaille au curry", 12.5, false],
+  ["plats", "Complet Poisson", 15.0, false],
+  ["plats", "Calamar doré", 12.0, false],
+  ["plats", "Spaghetti bolognaise", 9.5, false],
+  ["plats", "Puttanesca", 8.5, false],
+  ["plats", "Tagliatelle au saumon", 16.0, false],
+  ["plats", "Gratin de Fruits de mer", 15.0, true],
+  ["plats", "Lasagnes", 9.0, true],
+  ["plats", "Ojja Merguez", 8.0, false],
+  ["plats", "Ojja Fruits de mer", 9.0, false],
+  ["plats", "Salade César", 6.5, false],
+  ["plats", "Salade Roxford", 7.5, false],
+  ["plats", "Salade Méchouiya", 4.0, false],
 ];
 
-export const seedProducts: Product[] = raw.map(
-  ([category_id, name, description, price, is_featured, sort_order], i) => ({
+/** [nom, prix L, prix XL, en vedette] — les pizzas sont servies en deux tailles. */
+const pizzas: Array<[string, number, number, boolean]> = [
+  ["Margherita", 6.5, 9.5, false],
+  ["Neptune", 7.4, 12.0, false],
+  ["Quatre Fromages", 9.8, 14.5, true],
+  ["Végétarienne", 7.5, 11.0, false],
+  ["Quatre Saisons", 8.2, 12.5, false],
+  ["Bolonaise", 8.5, 12.0, false],
+  ["Regina", 7.5, 11.0, false],
+  ["Roxford", 10.8, 18.5, true],
+  ["Fruits de Mer", 13.0, 16.0, true],
+];
+
+export const seedProducts: Product[] = [
+  ...simple.map(([category_id, name, price, is_featured], i) => ({
     id: `seed-${i}`,
     category_id,
     name,
-    description,
+    description: null,
     price,
     price_variants: [],
     image_url: null,
     tags: [],
     is_available: true,
     is_featured,
-    sort_order,
-  }),
-);
+    sort_order: (i + 1) * 10,
+  })),
+  ...pizzas.map(([name, large, xlarge, is_featured], i) => ({
+    id: `seed-pizza-${i}`,
+    category_id: "pizzas",
+    name,
+    description: null,
+    price: large,
+    price_variants: [
+      { label: "L", price: large },
+      { label: "XL", price: xlarge },
+    ],
+    image_url: null,
+    tags: [],
+    is_available: true,
+    is_featured,
+    sort_order: (i + 1) * 10,
+  })),
+];
 
 export const seedGallery: GalleryImage[] = [
   { id: "g1", url: "/photos/salle-1.png", caption: "La salle et ses hublots de bois", sort_order: 10 },

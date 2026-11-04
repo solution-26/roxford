@@ -29,6 +29,12 @@
   --color-aqua-deep: #1f5b59;
   --color-terracotta: #c0561f;
 
+  /* — Fromage : la spécialité de la maison —
+       Un or plus jaune que le laiton, pour les coulées et la croûte. */
+  --color-cheese: #e8b24a;
+  --color-cheese-soft: #f4d388;
+  --color-cheese-deep: #c2871f;
+
   /* — Lignes — */
   --color-line: #ded2c3;
   --color-line-soft: #eee4d7;

@@ -35,12 +35,14 @@ npm run dev                  # http://localhost:3000
 
 ## 2. Initialiser la base
 
-1. Supabase → **SQL Editor** → **New query**
-2. Collez tout [`supabase/migrations/0001_init.sql`](supabase/migrations/0001_init.sql) → **Run**
+Supabase → **SQL Editor** → **New query**, puis exécutez les trois fichiers
+**dans l'ordre** :
 
-Cela crée les tables (`site_settings`, `categories`, `products`,
-`gallery_images`, `admin_users`), les policies RLS, le bucket de stockage
-`media`, et insère un contenu de départ.
+| Fichier | Ce qu'il fait |
+|---|---|
+| [`0001_init.sql`](supabase/migrations/0001_init.sql) | Tables, policies RLS, bucket `media`, contenu de départ |
+| [`0002_price_variants.sql`](supabase/migrations/0002_price_variants.sql) | Tailles multiples par plat (les pizzas sont en L et XL) |
+| [`0003_menu_reel.sql`](supabase/migrations/0003_menu_reel.sql) | Remplace le menu provisoire par la carte réelle du restaurant |
 
 ### Créer le compte administrateur
 
@@ -155,7 +157,14 @@ Le code ne contient aucune donnée en dur : tout vient de la base.
 - **SEO** : données structurées `schema.org/Restaurant` (horaires, téléphone,
   adresse), Open Graph, et `/admin` exclu de l'indexation.
 - **Impression** : la carte sort proprement sur papier (`@media print`).
-- **Le menu actuel est provisoire.** La page Facebook de Roxford est protégée
-  par un mur de connexion : les plats et prix réels n'ont pas pu être
-  récupérés. Les tarifs respectent la fourchette 10–20 DT annoncée et sont
-  tous à corriger depuis `/admin`.
+- **Six prix sont à vérifier.** La carte vient du panneau-menu du
+  restaurant, dont la seule photo disponible fait 460×614 px. Six chiffres
+  sont à la limite de lisibilité ; ils sont signalés `VERIFIER` dans
+  [`0003_menu_reel.sql`](supabase/migrations/0003_menu_reel.sql).
+- **Carte intérieure non reprise** : Petit Cornet, Sandwich McFlash,
+  Suppléments, Extra, Boissons et Menu Enfant figurent sur la carte
+  intérieure, dont aucune photo lisible n'était disponible. À saisir depuis
+  `/admin`.
+- **Le fromage** est le fil conducteur visuel (section dédiée, coulée animée
+  entre les sections, part de fromage sur les spécialités), parce que c'est
+  la spécialité de la maison.

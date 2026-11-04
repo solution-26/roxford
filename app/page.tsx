@@ -1,5 +1,8 @@
 import { About } from "@/components/site/About";
+import { CheeseDrip } from "@/components/site/Cheese";
+import { CheeseSection } from "@/components/site/CheeseSection";
 import { Footer } from "@/components/site/Footer";
+import { ScrollProgress } from "@/components/site/ScrollProgress";
 import { Gallery } from "@/components/site/Gallery";
 import { Header } from "@/components/site/Header";
 import { Hero } from "@/components/site/Hero";
@@ -57,6 +60,8 @@ export default async function HomePage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
       />
 
+      <ScrollProgress />
+
       <Header
         name={settings.restaurant_name}
         logoUrl={settings.logo_url}
@@ -67,6 +72,18 @@ export default async function HomePage() {
         <Hero settings={settings} openLabel={label} isOpen={isOpen} />
         <Marquee items={marqueeItems} />
         <About settings={settings} />
+
+        {/* Coulée de fromage : la salle s'ouvre sur la spécialité */}
+        <CheeseDrip
+          from="var(--color-cheese)"
+          background="var(--color-walnut-deep)"
+        />
+        <CheeseSection />
+        <CheeseDrip
+          from="var(--color-walnut-deep)"
+          background="var(--color-cream-deep)"
+        />
+
         <MenuSection
           categories={categories}
           products={products}

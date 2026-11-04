@@ -11,6 +11,7 @@ import {
 import { ArrowDown, MapPin, Phone, UtensilsCrossed } from "lucide-react";
 import { useRef } from "react";
 import type { SiteSettings } from "@/lib/types";
+import { CheeseHaze } from "./Cheese";
 
 const ease = [0.2, 0, 0, 1] as const;
 
@@ -78,6 +79,9 @@ export function Hero({
             de la salle reste visible à droite. — */}
       <div className="absolute inset-0 -z-10 bg-gradient-to-r from-night/92 via-night/55 to-night/20" />
       <div className="absolute inset-0 -z-10 bg-gradient-to-t from-night via-night/40 to-night/15" />
+
+      {/* Trous d'emmental en suspension — la spécialité, en sourdine */}
+      <CheeseHaze />
 
       <motion.div
         className="relative mx-auto w-full max-w-[1180px] px-4 pb-28 pt-36 sm:px-6 lg:px-9"
