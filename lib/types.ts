@@ -36,12 +36,23 @@ export type Category = {
   is_active: boolean;
 };
 
+/**
+ * Une taille et son prix, ex. { label: "XL", price: 9.5 }.
+ * Utilisé pour les pizzas, qui sont servies en S / L / XL.
+ */
+export type PriceVariant = {
+  label: string;
+  price: number;
+};
+
 export type Product = {
   id: string;
   category_id: string | null;
   name: string;
   description: string | null;
+  /** Prix unique. Ignoré à l'affichage dès que price_variants est rempli. */
   price: number;
+  price_variants: PriceVariant[];
   image_url: string | null;
   tags: string[];
   is_available: boolean;

@@ -16,7 +16,7 @@ import type { Category, GalleryImage, Product, SiteSettings } from "./types";
 export const seedSettings: SiteSettings = {
   id: 1,
   restaurant_name: "Roxford",
-  tagline: "Restaurant & Fast Food",
+  tagline: "Restaurant · Fast Food & More",
   description:
     "Au cœur de Nabeul, Roxford vous accueille dans une salle à l'esprit marin — boiseries chaudes, hublots de laiton et aquariums — pour une cuisine généreuse servie du midi jusque tard le soir.",
   logo_url: null,
@@ -117,6 +117,7 @@ export const seedProducts: Product[] = raw.map(
     name,
     description,
     price,
+    price_variants: [],
     image_url: null,
     tags: [],
     is_available: true,

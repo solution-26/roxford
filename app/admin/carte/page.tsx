@@ -23,8 +23,8 @@ import {
   Textarea,
   Toggle,
 } from "@/components/admin/ui";
-import { formatPrice } from "@/lib/hours";
-import type { Category, Product } from "@/lib/types";
+import { formatAmount, formatPrice } from "@/lib/hours";
+import type { Category, PriceVariant, Product } from "@/lib/types";
 
 type Message = { tone: "ok" | "error"; text: string } | null;
 
@@ -69,6 +69,12 @@ export default function MenuAdminPage() {
       ((prods.data ?? []) as Product[]).map((p) => ({
         ...p,
         price: Number(p.price),
+        price_variants: Array.isArray(p.price_variants)
+          ? p.price_variants.map((v) => ({
+              label: String(v?.label ?? ""),
+              price: Number(v?.price ?? 0),
+            }))
+          : [],
       })),
     );
     setSelected((s) => s ?? list[0]?.id ?? null);
@@ -159,11 +165,18 @@ export default function MenuAdminPage() {
     if (!name || !draft.category_id) return;
 
     const siblings = products.filter((p) => p.category_id === draft.category_id);
+
+    // On ne garde que les tailles réellement nommées.
+    const variants = (draft.price_variants ?? [])
+      .map((v) => ({ label: v.label.trim(), price: Number(v.price) || 0 }))
+      .filter((v) => v.label.length > 0);
+
     const payload = {
       category_id: draft.category_id,
       name,
       description: draft.description || null,
       price: Number(draft.price ?? 0),
+      price_variants: variants,
       image_url: draft.image_url || null,
       tags: draft.tags ?? [],
       is_available: draft.is_available ?? true,
@@ -375,7 +388,11 @@ export default function MenuAdminPage() {
                   </div>
 
                   <span className="shrink-0 font-display font-semibold tabular-nums text-aqua">
-                    {formatPrice(item.price)}
+                    {item.price_variants.length > 0
+                      ? item.price_variants
+                          .map((v) => `${v.label} ${formatAmount(v.price)}`)
+                          .join("  ·  ")
+                      : formatPrice(item.price)}
                   </span>
 
                   <button
@@ -500,6 +517,13 @@ export default function MenuAdminPage() {
             </Field>
           </div>
 
+          <VariantEditor
+            variants={editing.price_variants ?? []}
+            onChange={(price_variants) =>
+              setEditing({ ...editing, price_variants })
+            }
+          />
+
           <ImageUploader
             supabase={supabase}
             folder="plats"
@@ -522,6 +546,85 @@ export default function MenuAdminPage() {
             />
           </div>
         </Modal>
+      )}
+    </div>
+  );
+}
+
+/**
+ * Tailles multiples (S / L / XL pour les pizzas, Petite / Grande…).
+ * Tant que la liste est vide, le plat garde son prix unique.
+ */
+function VariantEditor({
+  variants,
+  onChange,
+}: {
+  variants: PriceVariant[];
+  onChange: (variants: PriceVariant[]) => void;
+}) {
+  const set = (i: number, changes: Partial<PriceVariant>) =>
+    onChange(variants.map((v, j) => (i === j ? { ...v, ...changes } : v)));
+
+  return (
+    <div className="rounded-xl border border-line bg-cream p-4">
+      <div className="flex flex-wrap items-center justify-between gap-2">
+        <span className="text-sm font-semibold text-ink">
+          Tailles (facultatif)
+        </span>
+        <Button
+          type="button"
+          variant="ghost"
+          onClick={() => onChange([...variants, { label: "", price: 0 }])}
+        >
+          <Plus size={14} /> Ajouter une taille
+        </Button>
+      </div>
+
+      {variants.length === 0 ? (
+        <p className="mt-2 text-xs text-muted">
+          Laissez vide pour un prix unique. Ajoutez des tailles pour les
+          pizzas&nbsp;: la carte affichera alors une colonne par taille, comme
+          le panneau du restaurant.
+        </p>
+      ) : (
+        <>
+          <ul className="mt-4 space-y-2">
+            {variants.map((variant, i) => (
+              <li key={i} className="flex items-center gap-2">
+                <Input
+                  value={variant.label}
+                  onChange={(e) => set(i, { label: e.target.value })}
+                  placeholder="S"
+                  aria-label={`Nom de la taille ${i + 1}`}
+                  className="w-24"
+                />
+                <Input
+                  type="number"
+                  step="0.100"
+                  min="0"
+                  value={variant.price}
+                  onChange={(e) => set(i, { price: Number(e.target.value) })}
+                  aria-label={`Prix de la taille ${i + 1}`}
+                  className="w-32"
+                />
+                <span className="text-sm text-muted">DT</span>
+                <button
+                  type="button"
+                  aria-label="Retirer cette taille"
+                  onClick={() => onChange(variants.filter((_, j) => j !== i))}
+                  className="ml-auto rounded-lg border border-red-200 p-2 text-red-600 transition-colors hover:bg-red-50"
+                >
+                  <Trash2 size={14} />
+                </button>
+              </li>
+            ))}
+          </ul>
+          <p className="mt-3 text-xs text-muted">
+            Pour que la carte s&apos;affiche en colonnes, donnez les mêmes
+            noms de tailles, dans le même ordre, à tous les plats de la
+            catégorie.
+          </p>
+        </>
       )}
     </div>
   );

@@ -79,7 +79,16 @@ export async function getSiteContent(): Promise<SiteContent> {
       },
       categories: categories.length ? categories : seedCategories,
       products: products.length
-        ? products.map((p) => ({ ...p, price: Number(p.price) }))
+        ? products.map((p) => ({
+            ...p,
+            price: Number(p.price),
+            price_variants: Array.isArray(p.price_variants)
+              ? p.price_variants.map((v) => ({
+                  label: String(v?.label ?? ""),
+                  price: Number(v?.price ?? 0),
+                }))
+              : [],
+          }))
         : categories.length
           ? []
           : seedProducts,

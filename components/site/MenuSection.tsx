@@ -4,10 +4,34 @@ import Image from "next/image";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { Star } from "lucide-react";
 import { useMemo, useState } from "react";
-import { formatPrice } from "@/lib/hours";
+import { formatAmount, formatPrice } from "@/lib/hours";
 import type { Category, Product } from "@/lib/types";
 
 const ease = [0.2, 0, 0, 1] as const;
+
+/** Largeur d'une colonne de prix, partagée par l'en-tête et les lignes. */
+const COL = "w-[4.75rem]";
+
+/**
+ * Renvoie les tailles d'une catégorie si — et seulement si — tous ses plats
+ * portent exactement les mêmes étiquettes (ex. S / L / XL pour les pizzas).
+ * Dans ce cas la catégorie s'affiche en colonnes, comme le panneau du
+ * restaurant. Sinon, chaque plat garde son prix unique.
+ */
+function sharedVariantLabels(items: Product[]): string[] | null {
+  if (items.length === 0) return null;
+  const first = items[0].price_variants;
+  if (!first || first.length === 0) return null;
+
+  const labels = first.map((v) => v.label);
+  const same = items.every(
+    (item) =>
+      item.price_variants.length === labels.length &&
+      item.price_variants.every((v, i) => v.label === labels[i]),
+  );
+
+  return same ? labels : null;
+}
 
 export function MenuSection({
   categories,
@@ -40,10 +64,10 @@ export function MenuSection({
   const grouped = useMemo(() => {
     const source = active === "all" ? filled : filled.filter((c) => c.id === active);
     return source
-      .map((category) => ({
-        category,
-        items: visible.filter((p) => p.category_id === category.id),
-      }))
+      .map((category) => {
+        const items = visible.filter((p) => p.category_id === category.id);
+        return { category, items, variantLabels: sharedVariantLabels(items) };
+      })
       .filter((g) => g.items.length > 0);
   }, [filled, visible, active]);
 
@@ -131,7 +155,7 @@ export function MenuSection({
               exit={reduced ? undefined : { opacity: 0, y: -10 }}
               transition={{ duration: 0.4, ease }}
             >
-              {grouped.map(({ category, items }) => (
+              {grouped.map(({ category, items, variantLabels }) => (
                 <div key={category.id}>
                   <div className="mb-8 flex items-baseline gap-5">
                     <h3 className="font-display text-2xl font-semibold tracking-tight text-walnut sm:text-3xl">
@@ -145,7 +169,27 @@ export function MenuSection({
                     )}
                   </div>
 
-                  <div className="grid gap-x-12 gap-y-2 lg:grid-cols-2">
+                  {/* En-tête des tailles : une seule fois pour la catégorie */}
+                  {variantLabels && (
+                    <div className="mb-1 flex justify-end gap-2 pr-4">
+                      {variantLabels.map((label) => (
+                        <span
+                          key={label}
+                          className={`${COL} text-right text-[11px] font-semibold uppercase tracking-[0.18em] text-brass`}
+                        >
+                          {label}
+                        </span>
+                      ))}
+                    </div>
+                  )}
+
+                  <div
+                    className={
+                      variantLabels
+                        ? "grid gap-y-1"
+                        : "grid gap-x-12 gap-y-2 lg:grid-cols-2"
+                    }
+                  >
                     {items.map((item, i) => (
                       <Dish
                         key={item.id}
@@ -153,6 +197,7 @@ export function MenuSection({
                         currency={currency}
                         index={i}
                         reduced={!!reduced}
+                        columns={!!variantLabels}
                       />
                     ))}
                   </div>
@@ -206,11 +251,14 @@ function Dish({
   currency,
   index,
   reduced,
+  columns,
 }: {
   item: Product;
   currency: string;
   index: number;
   reduced: boolean;
+  /** true quand toute la catégorie partage les mêmes tailles. */
+  columns: boolean;
 }) {
   return (
     <motion.article
@@ -256,9 +304,39 @@ function Dish({
             className="mx-1 hidden h-px min-w-6 flex-1 self-center border-b border-dotted border-line sm:block"
           />
 
-          <span className="ml-auto shrink-0 font-display text-lg font-semibold tabular-nums text-aqua sm:ml-0">
-            {formatPrice(item.price, currency)}
-          </span>
+          {columns ? (
+            // Une colonne par taille, alignée sur l'en-tête de la catégorie.
+            <span className="ml-auto flex shrink-0 gap-2 sm:ml-0">
+              {item.price_variants.map((variant) => (
+                <span
+                  key={variant.label}
+                  className={`${COL} text-right font-display text-lg font-semibold tabular-nums text-aqua`}
+                >
+                  <span className="sr-only">{variant.label} : </span>
+                  {formatAmount(variant.price)}
+                </span>
+              ))}
+            </span>
+          ) : item.price_variants.length > 0 ? (
+            // Tailles non uniformes dans la catégorie : on les met en ligne.
+            <span className="ml-auto flex shrink-0 flex-wrap justify-end gap-x-3 sm:ml-0">
+              {item.price_variants.map((variant) => (
+                <span
+                  key={variant.label}
+                  className="font-display text-lg font-semibold tabular-nums text-aqua"
+                >
+                  <span className="text-xs font-semibold uppercase tracking-wider text-muted">
+                    {variant.label}{" "}
+                  </span>
+                  {formatAmount(variant.price)}
+                </span>
+              ))}
+            </span>
+          ) : (
+            <span className="ml-auto shrink-0 font-display text-lg font-semibold tabular-nums text-aqua sm:ml-0">
+              {formatPrice(item.price, currency)}
+            </span>
+          )}
         </div>
 
         {item.description && (

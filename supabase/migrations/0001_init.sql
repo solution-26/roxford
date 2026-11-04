@@ -46,7 +46,7 @@ grant execute on function public.is_admin() to anon, authenticated;
 create table if not exists public.site_settings (
   id              smallint primary key default 1,
   restaurant_name text        not null default 'Roxford',
-  tagline         text        not null default 'Restaurant & Fast Food',
+  tagline         text        not null default 'Restaurant · Fast Food & More',
   description     text,
   logo_url        text,
   hero_image_url  text,
@@ -220,7 +220,7 @@ insert into public.site_settings (
 ) values (
   1,
   'Roxford',
-  'Restaurant & Fast Food',
+  'Restaurant · Fast Food & More',
   'Au cœur de Nabeul, Roxford vous accueille dans une salle à l''esprit marin — boiseries chaudes, hublots de laiton et aquariums — pour une cuisine généreuse servie du midi jusque tard le soir.',
   '53 288 222',
   'CPV8+V57',

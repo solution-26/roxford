@@ -120,8 +120,13 @@ export function getOpenState(hours: DayHours[], date = new Date()): OpenState {
 
 export const DAY_ORDER = ORDER;
 
-/** « 12.5 » → « 12,500 DT » (format tunisien, 3 décimales). */
-export function formatPrice(value: number, currency = "DT"): string {
+/** « 12.5 » → « 12,500 » (format tunisien : 3 décimales, virgule). */
+export function formatAmount(value: number): string {
   const n = Number.isFinite(value) ? value : 0;
-  return `${n.toFixed(3).replace(".", ",")} ${currency}`;
+  return n.toFixed(3).replace(".", ",");
+}
+
+/** « 12.5 » → « 12,500 DT ». */
+export function formatPrice(value: number, currency = "DT"): string {
+  return `${formatAmount(value)} ${currency}`;
 }
