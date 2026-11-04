@@ -1,13 +1,14 @@
 import { About } from "@/components/site/About";
+import { CheeseBand } from "@/components/site/CheeseBand";
 import { CheeseDrip } from "@/components/site/Cheese";
-import { CheeseSection } from "@/components/site/CheeseSection";
 import { Footer } from "@/components/site/Footer";
-import { ScrollProgress } from "@/components/site/ScrollProgress";
 import { Gallery } from "@/components/site/Gallery";
 import { Header } from "@/components/site/Header";
 import { Hero } from "@/components/site/Hero";
 import { Marquee } from "@/components/site/Marquee";
 import { MenuSection } from "@/components/site/MenuSection";
+import { MenuTeaser } from "@/components/site/MenuTeaser";
+import { ScrollProgress } from "@/components/site/ScrollProgress";
 import { Visit } from "@/components/site/Visit";
 import { getSiteContent } from "@/lib/data";
 import { getOpenState } from "@/lib/hours";
@@ -19,7 +20,7 @@ export default async function HomePage() {
   const { settings, categories, products, gallery } = await getSiteContent();
   const { isOpen, label, todayIndex } = getOpenState(settings.hours);
 
-  // Bandeau défilant : les spécialités de la maison, sinon les catégories.
+  // Bandeau défilant : les plats mis en avant, sinon les catégories.
   const highlights = products
     .filter((p) => p.is_featured && p.is_available)
     .map((p) => p.name);
@@ -35,6 +36,7 @@ export default async function HomePage() {
     telephone: settings.phone ?? undefined,
     priceRange: settings.price_range ?? undefined,
     servesCuisine: ["Fast food", "Tunisienne", "Italienne"],
+    hasMenu: "/carte",
     address: {
       "@type": "PostalAddress",
       streetAddress: settings.address ?? undefined,
@@ -73,22 +75,34 @@ export default async function HomePage() {
         <Marquee items={marqueeItems} />
         <About settings={settings} />
 
-        {/* Coulée de fromage : la salle s'ouvre sur la spécialité */}
         <CheeseDrip
-          from="var(--color-cheese)"
-          background="var(--color-walnut-deep)"
+          from="var(--color-cream)"
+          background="var(--color-night)"
         />
-        <CheeseSection />
-        <CheeseDrip
-          from="var(--color-walnut-deep)"
-          background="var(--color-cream-deep)"
-        />
+        <CheeseBand />
 
-        <MenuSection
-          categories={categories}
-          products={products}
-          currency={settings.currency}
-        />
+        {/*
+          Sur mobile la carte complète rendrait la page interminable :
+          on n'affiche qu'un aperçu, renvoyant vers /carte. Sur grand
+          écran, la carte reste lisible d'une traite et reste en place.
+        */}
+        <section id="carte">
+          <div className="lg:hidden">
+            <MenuTeaser
+              categories={categories}
+              products={products}
+              currency={settings.currency}
+            />
+          </div>
+          <div className="hidden lg:block">
+            <MenuSection
+              categories={categories}
+              products={products}
+              currency={settings.currency}
+            />
+          </div>
+        </section>
+
         <Gallery images={gallery} />
         <Visit
           settings={settings}

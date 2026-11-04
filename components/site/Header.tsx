@@ -2,16 +2,26 @@
 
 import { AnimatePresence, motion, useScroll, useMotionValueEvent } from "motion/react";
 import { Menu, Phone, X } from "lucide-react";
+import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { Logo } from "./Logo";
 
 const LINKS = [
-  { href: "#maison", label: "La maison" },
-  { href: "#fromage", label: "Le fromage" },
-  { href: "#carte", label: "La carte" },
-  { href: "#galerie", label: "Galerie" },
-  { href: "#visite", label: "Nous trouver" },
+  { hash: "#maison", label: "La maison" },
+  { hash: "#carte", label: "La carte" },
+  { hash: "#galerie", label: "Galerie" },
+  { hash: "#visite", label: "Nous trouver" },
 ];
+
+/**
+ * Sur la page d'accueil, les liens font défiler. Ailleurs (la page
+ * carte), ils renvoient vers l'accueil au bon endroit — sauf « La
+ * carte », qui pointe alors sur la page dédiée.
+ */
+function resolve(hash: string, onHome: boolean) {
+  if (onHome) return hash;
+  return hash === "#carte" ? "/carte" : `/${hash}`;
+}
 
 export function Header({
   name,
@@ -25,6 +35,7 @@ export function Header({
   const [condensed, setCondensed] = useState(false);
   const [open, setOpen] = useState(false);
   const { scrollY } = useScroll();
+  const onHome = usePathname() === "/";
 
   useMotionValueEvent(scrollY, "change", (y) => setCondensed(y > 40));
 
@@ -41,7 +52,7 @@ export function Header({
       >
         <div className="mx-auto flex max-w-[1180px] items-center gap-4 px-4 sm:px-6 lg:px-9">
           <a
-            href="#top"
+            href={onHome ? "#top" : "/"}
             className="flex items-center gap-3"
             aria-label={`${name} — retour en haut`}
           >
@@ -63,8 +74,8 @@ export function Header({
           <nav className="ml-auto hidden items-center gap-1 md:flex">
             {LINKS.map((l) => (
               <a
-                key={l.href}
-                href={l.href}
+                key={l.hash}
+                href={resolve(l.hash, onHome)}
                 className={`group relative rounded-full px-4 py-2 text-sm font-medium transition-colors duration-300 ${
                   condensed
                     ? "text-ink-2 hover:text-walnut"
@@ -146,8 +157,8 @@ export function Header({
 
               {LINKS.map((l, i) => (
                 <motion.a
-                  key={l.href}
-                  href={l.href}
+                  key={l.hash}
+                  href={resolve(l.hash, onHome)}
                   onClick={() => setOpen(false)}
                   initial={{ opacity: 0, x: 18 }}
                   animate={{ opacity: 1, x: 0 }}

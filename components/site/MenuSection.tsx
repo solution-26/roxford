@@ -3,7 +3,6 @@
 import Image from "next/image";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { useMemo, useState } from "react";
-import { CheesePull, CheeseWedge } from "./Cheese";
 import { SplitText } from "./SplitText";
 import { formatAmount, formatPrice } from "@/lib/hours";
 import type { Category, Product } from "@/lib/types";
@@ -38,10 +37,13 @@ export function MenuSection({
   categories,
   products,
   currency,
+  showHeading = true,
 }: {
   categories: Category[];
   products: Product[];
   currency: string;
+  /** false sur /carte, où la page porte déjà son titre. */
+  showHeading?: boolean;
 }) {
   const [active, setActive] = useState<string>("all");
   const reduced = useReducedMotion();
@@ -74,7 +76,7 @@ export function MenuSection({
 
   if (filled.length === 0) {
     return (
-      <section id="carte" className="bg-cream-deep py-24">
+      <section className="bg-cream-deep py-24">
         <div className="mx-auto max-w-[1180px] px-4 text-center sm:px-6 lg:px-9">
           <p className="eyebrow text-brass">La carte</p>
           <h2 className="mt-5 font-display text-4xl font-semibold text-ink">
@@ -91,39 +93,46 @@ export function MenuSection({
 
   return (
     <section
-      id="carte"
-      className="grain relative overflow-hidden bg-cream-deep py-20 sm:py-28 lg:py-32"
+      className={`grain relative overflow-hidden bg-cream-deep pb-20 sm:pb-28 lg:pb-32 ${
+        showHeading ? "pt-20 sm:pt-28 lg:pt-32" : "pt-6"
+      }`}
     >
       <div className="mx-auto max-w-[1180px] px-4 sm:px-6 lg:px-9">
-        {/* — Titre — */}
-        <div className="text-center">
-          <motion.p
-            className="eyebrow text-brass"
-            initial={{ opacity: 0, y: 14 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5 }}
-          >
-            La carte
-          </motion.p>
-          <h2 className="mx-auto mt-5 max-w-2xl font-display text-[clamp(2.2rem,5.5vw,3.6rem)] font-semibold leading-[1.05] tracking-[-0.03em] text-ink">
-            <SplitText
-              text="Tout est préparé minute"
-              highlight={["minute"]}
-              delay={0.08}
+        {/* — Titre. Masqué sur /carte, où la page a déjà le sien. — */}
+        {showHeading && (
+          <div className="text-center">
+            <motion.p
+              className="eyebrow text-brass"
+              initial={{ opacity: 0, y: 14 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5 }}
+            >
+              La carte
+            </motion.p>
+            <h2 className="mx-auto mt-5 max-w-2xl font-display text-[clamp(2.2rem,5.5vw,3.6rem)] font-semibold leading-[1.05] tracking-[-0.03em] text-ink">
+              <SplitText
+                text="Tout est préparé minute"
+                highlight={["minute"]}
+                delay={0.08}
+              />
+            </h2>
+            <motion.div
+              className="rule-brass mx-auto mt-8 h-px w-40"
+              initial={{ scaleX: 0 }}
+              whileInView={{ scaleX: 1 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8, delay: 0.2, ease }}
             />
-          </h2>
-          <motion.div
-            className="rule-brass mx-auto mt-8 h-px w-40"
-            initial={{ scaleX: 0 }}
-            whileInView={{ scaleX: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8, delay: 0.2, ease }}
-          />
-        </div>
+          </div>
+        )}
 
         {/* — Filtres de catégories — */}
-        <div className="no-print sticky top-[4.5rem] z-30 -mx-4 mt-12 px-4 py-3 sm:-mx-6 sm:px-6 lg:-mx-9 lg:px-9">
+        <div
+          className={`no-print sticky top-[4.5rem] z-30 -mx-4 px-4 py-3 sm:-mx-6 sm:px-6 lg:-mx-9 lg:px-9 ${
+            showHeading ? "mt-12" : ""
+          }`}
+        >
           <div className="fade-edges overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
             <div className="mx-auto flex w-max gap-1.5 rounded-full border border-line bg-cream/85 p-1.5 shadow-[0_10px_34px_-24px_rgba(32,25,20,0.7)] backdrop-blur-xl">
               <Tab
@@ -292,14 +301,8 @@ function Dish({
           </h4>
 
           {item.is_featured && (
-            <span
-              className="relative inline-flex shrink-0 items-center gap-1 rounded-full bg-cheese/20 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-cheese-deep"
-              title="Spécialité de la maison"
-            >
-              <CheeseWedge size={11} className="text-cheese-deep" />
+            <span className="inline-flex shrink-0 items-center rounded-full border border-brass/45 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.14em] text-brass">
               Signature
-              {/* Filaments de fromage au survol du plat */}
-              <CheesePull />
             </span>
           )}
 

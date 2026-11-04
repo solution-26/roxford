@@ -118,11 +118,13 @@ Points utiles :
 ```
 app/
   layout.tsx           métadonnées, polices, données structurées
-  page.tsx             la page publique (assemble les sections)
+  page.tsx             la page d'accueil
+  carte/page.tsx       la carte complète (page dédiée)
   admin/               espace propriétaire (client, protégé)
 components/
-  site/                Header, Hero, Marquee, About, MenuSection,
-                       Gallery, Visit, Footer, Logo, Reveal
+  site/                Header, Hero, Marquee, About, CheeseBand,
+                       MenuSection, MenuTeaser, Gallery, Visit,
+                       Footer, Logo, Reveal, SplitText, ScrollProgress
   admin/               AdminGate (auth), Shell, ImageUploader, ui
 lib/
   data.ts              lecture Supabase + repli automatique
@@ -165,6 +167,10 @@ Le code ne contient aucune donnée en dur : tout vient de la base.
   Suppléments, Extra, Boissons et Menu Enfant figurent sur la carte
   intérieure, dont aucune photo lisible n'était disponible. À saisir depuis
   `/admin`.
-- **Le fromage** est le fil conducteur visuel (section dédiée, coulée animée
-  entre les sections, part de fromage sur les spécialités), parce que c'est
-  la spécialité de la maison.
+- **La carte a deux emplacements.** Sur grand écran elle reste sur la page
+  d'accueil ; sur mobile, où elle rendrait la page interminable, l'accueil
+  n'affiche qu'un aperçu renvoyant vers `/carte`. Même ancre `#carte`,
+  contenu responsive — voir [`app/page.tsx`](app/page.tsx).
+- **Photo de la bande fromage** : Brelyn Bashrum via Unsplash
+  (`public/photos/fromage-filant.jpg`), licence libre y compris commerciale.
+  À remplacer par une photo du restaurant dès qu'elle est disponible.

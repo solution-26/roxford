@@ -114,18 +114,18 @@ export function Footer({ settings }: { settings: SiteSettings }) {
             <h3 className="eyebrow text-brass-soft">Le site</h3>
             <ul className="mt-5 space-y-3 text-sm">
               {[
-                ["#maison", "La maison"],
-                ["#carte", "La carte"],
-                ["#galerie", "Galerie"],
-                ["#visite", "Nous trouver"],
+                ["/#maison", "La maison"],
+                ["/carte", "La carte"],
+                ["/#galerie", "Galerie"],
+                ["/#visite", "Nous trouver"],
               ].map(([href, label]) => (
                 <li key={href}>
-                  <a
+                  <Link
                     href={href}
                     className="text-sand/80 underline-offset-4 transition-colors hover:text-cream hover:underline"
                   >
                     {label}
-                  </a>
+                  </Link>
                 </li>
               ))}
             </ul>
