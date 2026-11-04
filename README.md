@@ -35,8 +35,12 @@ npm run dev                  # http://localhost:3000
 
 ## 2. Initialiser la base
 
-Supabase → **SQL Editor** → **New query**, puis exécutez les trois fichiers
-**dans l'ordre** :
+**Le plus simple** : collez [`supabase/setup.sql`](supabase/setup.sql) dans
+Supabase → **SQL Editor** → **New query** → **Run**. Ce fichier regroupe les
+trois migrations et déclare le compte administrateur, en un seul passage.
+
+Ou, migration par migration, Supabase → **SQL Editor** → **New query**, dans
+l'ordre :
 
 | Fichier | Ce qu'il fait |
 |---|---|
