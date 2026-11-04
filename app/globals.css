@@ -1,26 +1,229 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/* ============================================================
+   Roxford — « Maritime chaleureux »
+   Palette dérivée de la salle : noyer, laiton, crème, et le
+   turquoise des aquariums. Base : design system « cafe »
+   (open-design), retravaillée pour le lieu.
+   ============================================================ */
+
+@theme {
+  /* — Surfaces — */
+  --color-cream: #fbf6ee;
+  --color-cream-deep: #f4ebdd;
+  --color-surface: #fffdf8;
+  --color-sand: #f1e3cf;
+
+  /* — Bois & encre — */
+  --color-ink: #201914;
+  --color-ink-2: #4c4037;
+  --color-muted: #7a6d63;
+  --color-walnut: #5d4432;
+  --color-walnut-deep: #33241a;
+  --color-night: #14100c;
+
+  /* — Accents — */
+  --color-brass: #b08d57;
+  --color-brass-soft: #d8bd8d;
+  --color-aqua: #2e7d7b;
+  --color-aqua-deep: #1f5b59;
+  --color-terracotta: #c0561f;
+
+  /* — Lignes — */
+  --color-line: #ded2c3;
+  --color-line-soft: #eee4d7;
+
+  /* — Typographie — */
+  --font-display: var(--font-fraunces), Georgia, serif;
+  --font-body: var(--font-dm-sans), system-ui, sans-serif;
+
+  /* — Rythme — */
+  --radius-card: 18px;
+  --radius-pill: 9999px;
+
+  /* — Mouvement — */
+  --ease-out-soft: cubic-bezier(0.2, 0, 0, 1);
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+/* ------------------------------------------------------------
+   Base
+   ------------------------------------------------------------ */
+* {
+  min-width: 0;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--color-cream);
+  color: var(--color-ink);
+  font-family: var(--font-body);
+  font-size: 17px;
+  line-height: 1.62;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+::selection {
+  background: var(--color-brass);
+  color: #fff;
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-aqua);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+/* Barre de défilement discrète, dans la palette */
+::-webkit-scrollbar {
+  width: 11px;
+  height: 11px;
+}
+::-webkit-scrollbar-track {
+  background: var(--color-cream-deep);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-brass-soft);
+  border-radius: 99px;
+  border: 3px solid var(--color-cream-deep);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-brass);
+}
+
+/* ------------------------------------------------------------
+   Utilitaires maison
+   ------------------------------------------------------------ */
+
+/* Grain de papier très léger : réchauffe les aplats crème */
+.grain::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.4;
+  mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)' opacity='0.22'/%3E%3C/svg%3E");
+}
+
+/* Cadre « hublot » : l'anneau de laiton des fenêtres de la salle */
+.porthole {
+  border-radius: 9999px;
+  box-shadow:
+    0 0 0 3px var(--color-cream),
+    0 0 0 9px var(--color-brass),
+    0 0 0 10px rgba(51, 36, 26, 0.35),
+    0 26px 60px -18px rgba(32, 25, 20, 0.55);
+}
+
+/* Filet décoratif entre deux titres */
+.rule-brass {
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--color-brass) 18%,
+    var(--color-brass) 82%,
+    transparent
+  );
+}
+
+/* Texte d'accroche en petites capitales espacées */
+.eyebrow {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+}
+
+/* Défilement horizontal infini du bandeau de spécialités */
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+.animate-marquee {
+  animation: marquee 38s linear infinite;
+}
+.marquee-host:hover .animate-marquee {
+  animation-play-state: paused;
+}
+
+/* Ondulation lente de la ligne d'eau sous le héros */
+@keyframes drift {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+.animate-drift {
+  animation: drift 24s linear infinite;
+}
+
+/* Reflet qui traverse les boutons principaux */
+@keyframes sheen {
+  0% {
+    transform: translateX(-120%) skewX(-18deg);
+  }
+  100% {
+    transform: translateX(260%) skewX(-18deg);
+  }
+}
+
+/* Masquage progressif des bords d'un rail horizontal */
+.fade-edges {
+  mask-image: linear-gradient(
+    90deg,
+    transparent,
+    #000 28px,
+    #000 calc(100% - 28px),
+    transparent
+  );
+}
+
+/* Sections sombres : inverse la palette sans dupliquer les classes */
+.on-dark {
+  color: var(--color-sand);
+}
+.on-dark h1,
+.on-dark h2,
+.on-dark h3 {
+  color: var(--color-cream);
+}
+
+/* ------------------------------------------------------------
+   Accessibilité : on coupe tout mouvement superflu
+   ------------------------------------------------------------ */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}
+
+/* ------------------------------------------------------------
+   Impression : la carte doit sortir proprement sur papier
+   ------------------------------------------------------------ */
+@media print {
+  .no-print {
+    display: none !important;
+  }
+  body {
+    background: #fff;
+    font-size: 12px;
+  }
 }

@@ -1,36 +1,161 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Roxford — site vitrine + espace propriétaire
 
-## Getting Started
+Site d'un restaurant, en français, avec une interface d'administration qui
+permet au propriétaire de changer le nom, le logo, les horaires, les photos
+et toute la carte sans toucher au code.
 
-First, run the development server:
+- **Stack** : Next.js 15 (App Router) · React 19 · Tailwind CSS v4 · Motion · Supabase
+- **Design** : système « cafe » d'[open-design](https://github.com/nexu-io/open-design),
+  retravaillé en « maritime chaleureux » d'après le décor de la salle
+  (noyer, laiton, crème, turquoise des aquariums)
+
+---
+
+## 1. Démarrage
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
+cp .env.example .env.local   # puis renseignez les deux variables
+npm run dev                  # http://localhost:3000
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Variables d'environnement
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+| Variable | Où la trouver |
+|---|---|
+| `NEXT_PUBLIC_SUPABASE_URL` | Supabase → Project Settings → API → Project URL |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | même page → clé **publishable** (`sb_publishable_…`) |
+| `NEXT_PUBLIC_SITE_URL` | *(facultatif)* URL publique, pour les aperçus de partage |
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+> **Le site fonctionne même sans Supabase.** Si les variables sont absentes,
+> si la base est injoignable ou si une table est vide, le contenu de
+> [`lib/seed.ts`](lib/seed.ts) prend le relais. Aucune page ne tombe en erreur.
 
-## Learn More
+---
 
-To learn more about Next.js, take a look at the following resources:
+## 2. Initialiser la base
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+1. Supabase → **SQL Editor** → **New query**
+2. Collez tout [`supabase/migrations/0001_init.sql`](supabase/migrations/0001_init.sql) → **Run**
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Cela crée les tables (`site_settings`, `categories`, `products`,
+`gallery_images`, `admin_users`), les policies RLS, le bucket de stockage
+`media`, et insère un contenu de départ.
 
-## Deploy on Vercel
+### Créer le compte administrateur
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+1. **Authentication → Users → Add user**, en cochant **Auto Confirm User**
+2. **SQL Editor** :
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```sql
+insert into public.admin_users (user_id, email)
+select id, email from auth.users where email = 'VOTRE@EMAIL.COM'
+on conflict (user_id) do nothing;
+```
+
+> ⚠️ L'inscription publique est **activée** sur ce projet Supabase : n'importe
+> qui peut créer un compte. C'est pourquoi l'autorisation ne repose pas sur
+> « être connecté » mais sur l'appartenance à `admin_users`, vérifiée par la
+> fonction `is_admin()` dans **chaque policy d'écriture**. L'interface ne fait
+> que refléter cette règle ; la sécurité est appliquée en base.
+>
+> Pour fermer complètement les inscriptions :
+> Authentication → Sign In / Providers → désactiver **Allow new users to sign up**.
+
+---
+
+## 3. Déployer sur Vercel
+
+### Par l'interface (recommandé)
+
+1. Poussez ce dossier sur un dépôt GitHub
+2. [vercel.com/new](https://vercel.com/new) → importez le dépôt
+3. Ajoutez les deux variables d'environnement (`NEXT_PUBLIC_SUPABASE_URL`,
+   `NEXT_PUBLIC_SUPABASE_ANON_KEY`) — Next.js est détecté automatiquement
+4. **Deploy**
+
+### En ligne de commande
+
+```bash
+npx vercel login
+npx vercel link
+npx vercel env add NEXT_PUBLIC_SUPABASE_URL production
+npx vercel env add NEXT_PUBLIC_SUPABASE_ANON_KEY production
+npx vercel --prod
+```
+
+Une fois l'URL connue, ajoutez `NEXT_PUBLIC_SITE_URL` et redéployez pour que
+les aperçus de partage pointent au bon endroit.
+
+---
+
+## 4. L'espace propriétaire
+
+Accessible sur **`//admin`** (lien discret en bas du site).
+
+| Onglet | Ce qu'on y fait |
+|---|---|
+| **Établissement** | Nom, accroche, présentation, logo, photo d'accueil, téléphone, adresse, liens Maps / Facebook / Instagram, budget, devise, horaires jour par jour, services |
+| **La carte** | Catégories (créer, renommer, réordonner, masquer) et plats (nom, description, prix, photo, disponibilité, « spécialité ») |
+| **Galerie** | Téléverser, légender, réordonner et supprimer les photos |
+
+Points utiles :
+
+- **Masquer** un plat le retire du site sans le supprimer — pratique en rupture.
+- Le bandeau **« Ouvert / Fermé »** se calcule tout seul à partir des horaires,
+  à l'heure de Nabeul (`Africa/Tunis`), y compris pour un service qui finit
+  après minuit.
+- Les modifications apparaissent sur le site public **en moins d'une minute**
+  (`export const revalidate = 60` dans [`app/page.tsx`](app/page.tsx)).
+- Les images sont envoyées dans le bucket Supabase `media` (5 Mo maximum).
+
+---
+
+## 5. Organisation du code
+
+```
+app/
+  layout.tsx           métadonnées, polices, données structurées
+  page.tsx             la page publique (assemble les sections)
+  admin/               espace propriétaire (client, protégé)
+components/
+  site/                Header, Hero, Marquee, About, MenuSection,
+                       Gallery, Visit, Footer, Logo, Reveal
+  admin/               AdminGate (auth), Shell, ImageUploader, ui
+lib/
+  data.ts              lecture Supabase + repli automatique
+  seed.ts              contenu de démonstration
+  hours.ts             état ouvert/fermé, format des prix
+  types.ts             types partagés
+  supabase/            clients navigateur / serveur / public
+supabase/migrations/   schéma SQL
+public/photos/         photos de la salle
+```
+
+---
+
+## 6. Adapter le site à un autre restaurant
+
+Le code ne contient aucune donnée en dur : tout vient de la base.
+
+1. Dupliquez le dépôt
+2. Créez un projet Supabase et exécutez la même migration
+3. Changez les couleurs dans le bloc `@theme` de
+   [`app/globals.css`](app/globals.css) (une quinzaine de variables)
+4. Remplacez les photos de `public/photos/`
+5. Le reste (nom, logo, carte, horaires) se saisit depuis `/admin`
+
+---
+
+## 7. Notes
+
+- **Accessibilité** : navigation clavier dans la visionneuse, `focus-visible`
+  partout, et toutes les animations sont désactivées si le visiteur a demandé
+  « réduire les animations » dans son système.
+- **SEO** : données structurées `schema.org/Restaurant` (horaires, téléphone,
+  adresse), Open Graph, et `/admin` exclu de l'indexation.
+- **Impression** : la carte sort proprement sur papier (`@media print`).
+- **Le menu actuel est provisoire.** La page Facebook de Roxford est protégée
+  par un mur de connexion : les plats et prix réels n'ont pas pu être
+  récupérés. Les tarifs respectent la fourchette 10–20 DT annoncée et sont
+  tous à corriger depuis `/admin`.
