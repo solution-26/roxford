@@ -24,6 +24,7 @@ import {
   Toggle,
 } from "@/components/admin/ui";
 import { formatAmount, formatPrice } from "@/lib/hours";
+import { revalidatePublicPages } from "@/lib/revalidate";
 import type { Category, PriceVariant, Product } from "@/lib/types";
 
 type Message = { tone: "ok" | "error"; text: string } | null;
@@ -96,7 +97,7 @@ export default function MenuAdminPage() {
       return false;
     }
     setMessage({ tone: "ok", text: ok });
-    await load();
+    await Promise.all([load(), revalidatePublicPages(supabase)]);
     return true;
   }
 

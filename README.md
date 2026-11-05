@@ -112,8 +112,11 @@ Points utiles :
 - Le bandeau **« Ouvert / Fermé »** se calcule tout seul à partir des horaires,
   à l'heure de Nabeul (`Africa/Tunis`), y compris pour un service qui finit
   après minuit.
-- Les modifications apparaissent sur le site public **en moins d'une minute**
-  (`export const revalidate = 60` dans [`app/page.tsx`](app/page.tsx)).
+- Les modifications sont publiées **dès l'enregistrement** : l'administration
+  appelle `/api/revalidate`, qui régénère `/` et `/carte`. Cette route exige
+  un jeton Supabase appartenant à un compte d'`admin_users`, sinon n'importe
+  qui pourrait vider le cache en boucle. En cas d'échec, le délai de
+  `revalidate = 60` prend le relais.
 - Les images sont envoyées dans le bucket Supabase `media` (5 Mo maximum).
 
 ---

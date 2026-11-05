@@ -15,6 +15,7 @@ import {
   Toggle,
 } from "@/components/admin/ui";
 import { DAY_ORDER } from "@/lib/hours";
+import { revalidatePublicPages } from "@/lib/revalidate";
 import { seedSettings } from "@/lib/seed";
 import type { DayHours, SiteSettings } from "@/lib/types";
 
@@ -132,9 +133,10 @@ export default function SettingsPage() {
     }
 
     setForm((f) => (f ? { ...f, hours } : f));
+    await revalidatePublicPages(supabase);
     setMessage({
       tone: "ok",
-      text: "Modifications enregistrées. Le site public se met à jour en moins d'une minute.",
+      text: "Modifications enregistrées. Le site public est à jour.",
     });
   }
 
@@ -373,8 +375,7 @@ export default function SettingsPage() {
       <div className="fixed inset-x-0 bottom-0 z-40 border-t border-line bg-cream/95 backdrop-blur-xl">
         <div className="mx-auto flex max-w-6xl items-center gap-4 px-4 py-3.5 sm:px-6">
           <p className="hidden text-sm text-muted sm:block">
-            Les changements sont visibles sur le site public en moins
-            d&apos;une minute.
+            Les changements sont publiés sur le site dès l&apos;enregistrement.
           </p>
           {message?.tone === "ok" && (
             <span className="inline-flex items-center gap-1.5 text-sm font-semibold text-emerald-700">

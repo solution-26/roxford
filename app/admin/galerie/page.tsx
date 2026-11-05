@@ -13,6 +13,7 @@ import {
   Input,
   Spinner,
 } from "@/components/admin/ui";
+import { revalidatePublicPages } from "@/lib/revalidate";
 import type { GalleryImage } from "@/lib/types";
 
 export default function GalleryAdminPage() {
@@ -57,7 +58,7 @@ export default function GalleryAdminPage() {
       return;
     }
     setMessage({ tone: "ok", text: ok });
-    await load();
+    await Promise.all([load(), revalidatePublicPages(supabase)]);
   }
 
   async function add() {
