@@ -43,7 +43,11 @@ export function MenuTeaser({
           {count} plats, préparés minute
         </h2>
 
-        {/* Les catégories, en un coup d'œil */}
+        {/*
+          Chaque catégorie est un lien direct : on ne doit pas avoir à
+          passer par « Voir toute la carte » pour atteindre les pizzas.
+          Le fragment ouvre la bonne catégorie à l'arrivée.
+        */}
         <ul className="mt-7 flex flex-wrap gap-2">
           {categories.map((category, i) => (
             <motion.li
@@ -52,9 +56,13 @@ export function MenuTeaser({
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.4, delay: i * 0.05, ease }}
-              className="border border-gold/25 px-3 py-1.5 text-[11px] uppercase tracking-[0.12em] text-cream-dim/75"
             >
-              {category.name}
+              <Link
+                href={`/carte#${category.slug}`}
+                className="block border border-gold/25 px-3.5 py-2 text-[11px] uppercase tracking-[0.12em] text-cream-dim/80 transition-colors duration-300 hover:border-gold/70 hover:bg-gold/10 hover:text-gold-pale active:bg-gold/20"
+              >
+                {category.name}
+              </Link>
             </motion.li>
           ))}
         </ul>

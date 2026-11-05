@@ -70,7 +70,6 @@ export function Footer({ settings }: { settings: SiteSettings }) {
 
             <ul className="mt-6 space-y-2.5 text-[13px]">
               {[
-                ["/#fromage", "Le fromage"],
                 ["/carte", "La carte"],
                 ["/#galerie", "La salle"],
                 ["/#visite", "Nous trouver"],

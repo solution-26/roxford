@@ -12,7 +12,6 @@ import { useState } from "react";
 import { Logo } from "./Logo";
 
 const LINKS = [
-  { hash: "#fromage", label: "Le fromage" },
   { hash: "#carte", label: "La carte" },
   { hash: "#galerie", label: "La salle" },
   { hash: "#visite", label: "Nous trouver" },

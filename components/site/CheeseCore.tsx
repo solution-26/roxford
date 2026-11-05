@@ -78,24 +78,24 @@ export function CheeseCore() {
           deux photos empilées à droite. Sur mobile tout se remet en
           colonne, le texte d'abord.
         */}
-        <div className="grid gap-3 lg:grid-cols-12 lg:grid-rows-2 lg:gap-4">
+        <div className="grid grid-cols-2 gap-3 lg:grid-cols-12 lg:grid-rows-2 lg:gap-4">
           <Tile
             src="/photos/fondue.jpg"
             alt="Un morceau de pain plongé dans un caquelon de fromage fondu"
-            sizes="(max-width: 1024px) 50vw, 18vw"
-            className="order-2 aspect-[3/4] lg:order-none lg:col-span-2 lg:row-span-2 lg:aspect-auto"
+            sizes="(max-width: 1024px) 48vw, 18vw"
+            className="order-2 aspect-square lg:order-none lg:col-span-2 lg:row-span-2 lg:aspect-auto"
           />
 
           <Tile
             src="/photos/raclette.jpg"
             alt="Fromage fondu nappant des pommes de terre"
             delay={0.08}
-            sizes="(max-width: 1024px) 50vw, 24vw"
-            className="order-3 aspect-[3/4] lg:order-none lg:col-span-3 lg:row-span-2 lg:aspect-auto"
+            sizes="(max-width: 1024px) 48vw, 24vw"
+            className="order-3 aspect-square lg:order-none lg:col-span-3 lg:row-span-2 lg:aspect-auto"
           />
 
           {/* — Le texte — */}
-          <div className="order-1 flex flex-col items-center justify-center px-2 py-10 text-center lg:order-none lg:col-span-3 lg:row-span-2 lg:px-6 lg:py-0">
+          <div className="order-1 col-span-2 flex flex-col items-center justify-center px-2 py-8 text-center lg:order-none lg:col-span-3 lg:row-span-2 lg:px-6 lg:py-0">
             <motion.div
               initial={{ opacity: 0, scale: 0.85 }}
               whileInView={{ opacity: 1, scale: 1 }}
@@ -138,16 +138,16 @@ export function CheeseCore() {
             src="/photos/fromage-filant.jpg"
             alt="Une part de pizza soulevée, le fromage s'étire encore"
             delay={0.16}
-            sizes="(max-width: 1024px) 100vw, 34vw"
-            className="order-4 aspect-[16/9] lg:order-none lg:col-span-4 lg:aspect-auto"
+            sizes="(max-width: 1024px) 48vw, 34vw"
+            className="order-4 aspect-square lg:order-none lg:col-span-4 lg:aspect-auto"
           />
 
           <Tile
             src="/photos/gratin.jpg"
             alt="Un gratin sortant du four, croûte de fromage dorée"
             delay={0.24}
-            sizes="(max-width: 1024px) 100vw, 34vw"
-            className="order-5 aspect-[16/9] lg:order-none lg:col-span-4 lg:aspect-auto"
+            sizes="(max-width: 1024px) 48vw, 34vw"
+            className="order-5 aspect-square lg:order-none lg:col-span-4 lg:aspect-auto"
           />
         </div>
       </div>

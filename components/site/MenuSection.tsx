@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { formatAmount, formatPrice } from "@/lib/hours";
 import type { Category, Product } from "@/lib/types";
 import { SplitText } from "./SplitText";
@@ -23,6 +23,8 @@ export function MenuSection({
 }) {
   const [active, setActive] = useState<string>("all");
   const reduced = useReducedMotion();
+  const tabsRef = useRef<HTMLDivElement>(null);
+  const railRef = useRef<HTMLDivElement>(null);
 
   // On n'affiche que les catégories qui contiennent réellement un plat.
   const filled = useMemo(
@@ -44,6 +46,40 @@ export function MenuSection({
       }))
       .filter((g) => g.items.length > 0);
   }, [filled, products, active]);
+
+  /**
+   * « /carte#pizzas » ouvre directement la catégorie Pizzas.
+   *
+   * On passe par le fragment plutôt que par un paramètre de requête :
+   * la page reste statique, aucune frontière Suspense n'est nécessaire,
+   * et un lien reste partageable.
+   */
+  useEffect(() => {
+    const slug = decodeURIComponent(
+      window.location.hash.replace(/^#/, ""),
+    ).trim();
+    if (!slug) return;
+
+    const match = filled.find((c) => c.slug === slug);
+    if (!match) return;
+
+    setActive(match.id);
+    // Après le rendu de la catégorie, on amène les filtres sous l'en-tête.
+    requestAnimationFrame(() => {
+      tabsRef.current?.scrollIntoView({ block: "start", behavior: "auto" });
+    });
+  }, [filled]);
+
+  /**
+   * Le rail des filtres déborde horizontalement : sans cela, l'onglet
+   * actif peut rester hors champ et l'on croit que rien n'a changé.
+   */
+  useEffect(() => {
+    const current = railRef.current?.querySelector<HTMLElement>(
+      '[data-active="true"]',
+    );
+    current?.scrollIntoView({ inline: "center", block: "nearest" });
+  }, [active]);
 
   if (filled.length === 0) {
     return (
@@ -95,11 +131,15 @@ export function MenuSection({
 
         {/* — Filtres — */}
         <div
-          className={`no-print sticky top-[4.2rem] z-30 -mx-4 px-4 py-3 sm:-mx-6 sm:px-6 ${
+          ref={tabsRef}
+          className={`no-print sticky top-[4.2rem] z-30 -mx-4 scroll-mt-24 px-4 py-3 sm:-mx-6 sm:px-6 ${
             showHeading ? "mt-12" : ""
           }`}
         >
-          <div className="fade-edges overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+          <div
+            ref={railRef}
+            className="fade-edges overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+          >
             <div className="mx-auto flex w-max gap-1 border border-gold/25 bg-wood-deep/90 p-1 backdrop-blur-xl">
               <Tab
                 label="Tout"
@@ -191,6 +231,7 @@ function Tab({
       type="button"
       onClick={onClick}
       aria-pressed={isActive}
+      data-active={isActive}
       className={`relative shrink-0 px-4 py-2 text-[11px] font-medium uppercase tracking-[0.16em] transition-colors duration-300 ${
         isActive ? "text-wood-deep" : "text-cream-dim/70 hover:text-gold-soft"
       }`}
