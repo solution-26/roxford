@@ -1,53 +1,61 @@
 @import "tailwindcss";
 
 /* ============================================================
-   Roxford — « Maritime chaleureux »
-   Palette dérivée de la salle : noyer, laiton, crème, et le
-   turquoise des aquariums. Base : design system « cafe »
-   (open-design), retravaillée pour le lieu.
+   Roxford — bois, or et fromage
+   Noyer sombre sur toute la page, filets d'or, serif claire très
+   espacée. Les photos et la coulée de fromage sont les seules
+   zones claires : tout le reste leur sert d'écrin.
    ============================================================ */
 
 @theme {
-  /* — Surfaces — */
-  --color-cream: #fbf6ee;
-  --color-cream-deep: #f4ebdd;
-  --color-surface: #fffdf8;
-  --color-sand: #f1e3cf;
+  /* — Bois — */
+  --color-wood: #241810;
+  --color-wood-deep: #170e08;
+  --color-wood-soft: #32241a;
+  --color-wood-card: #2c1f16;
 
-  /* — Bois & encre — */
+  /* — Or — */
+  --color-gold: #c9a227;
+  --color-gold-soft: #e0c484;
+  --color-gold-pale: #f0dcae;
+
+  /* — Fromage (coulées, prix, accents chauds) — */
+  --color-cheese: #e8c06a;
+  --color-cheese-soft: #f6e3ac;
+  --color-cheese-deep: #c08f2a;
+
+  /* — Texte — */
+  --color-cream: #f2e7d6;
+  --color-cream-dim: #cbbaa2;
+  --color-muted: #9b8872;
+
+  /* ----------------------------------------------------------
+     Palette claire, réservée à /admin.
+     Le site public est sombre, mais un back-office se saisit
+     mieux sur fond clair : on garde donc les deux.
+     ---------------------------------------------------------- */
   --color-ink: #201914;
   --color-ink-2: #4c4037;
-  --color-muted: #7a6d63;
+  --color-surface: #fffdf8;
+  --color-cream-deep: #f4ebdd;
+  --color-sand: #f1e3cf;
+  --color-line: #ded2c3;
+  --color-line-soft: #eee4d7;
   --color-walnut: #5d4432;
   --color-walnut-deep: #33241a;
-  --color-night: #14100c;
-
-  /* — Accents — */
   --color-brass: #b08d57;
   --color-brass-soft: #d8bd8d;
   --color-aqua: #2e7d7b;
   --color-aqua-deep: #1f5b59;
-  --color-terracotta: #c0561f;
-
-  /* — Fromage : la spécialité de la maison —
-       Un or plus jaune que le laiton, pour les coulées et la croûte. */
-  --color-cheese: #e8b24a;
-  --color-cheese-soft: #f4d388;
-  --color-cheese-deep: #c2871f;
-
-  /* — Lignes — */
-  --color-line: #ded2c3;
-  --color-line-soft: #eee4d7;
+  --color-night: #14100c;
 
   /* — Typographie — */
-  --font-display: var(--font-fraunces), Georgia, serif;
+  --font-display: var(--font-cormorant), Georgia, serif;
   --font-body: var(--font-dm-sans), system-ui, sans-serif;
 
   /* — Rythme — */
-  --radius-card: 18px;
-  --radius-pill: 9999px;
+  --radius-card: 14px;
 
-  /* — Mouvement — */
   --ease-out-soft: cubic-bezier(0.2, 0, 0, 1);
 }
 
@@ -64,88 +72,144 @@ html {
 }
 
 body {
-  background: var(--color-cream);
-  color: var(--color-ink);
+  background: var(--color-wood);
+  color: var(--color-cream-dim);
   font-family: var(--font-body);
-  font-size: 17px;
-  line-height: 1.62;
+  font-size: 16px;
+  line-height: 1.68;
   -webkit-font-smoothing: antialiased;
   overflow-x: hidden;
 }
 
 ::selection {
-  background: var(--color-brass);
-  color: #fff;
+  background: var(--color-gold);
+  color: #1a1109;
 }
 
 :focus-visible {
-  outline: 2px solid var(--color-aqua);
+  outline: 2px solid var(--color-gold-soft);
   outline-offset: 3px;
   border-radius: 4px;
 }
 
-/* Barre de défilement discrète, dans la palette */
 ::-webkit-scrollbar {
   width: 11px;
   height: 11px;
 }
 ::-webkit-scrollbar-track {
-  background: var(--color-cream-deep);
+  background: var(--color-wood-deep);
 }
 ::-webkit-scrollbar-thumb {
-  background: var(--color-brass-soft);
+  background: #5a4228;
   border-radius: 99px;
-  border: 3px solid var(--color-cream-deep);
+  border: 3px solid var(--color-wood-deep);
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--color-brass);
+  background: var(--color-gold);
 }
 
 /* ------------------------------------------------------------
-   Utilitaires maison
+   Matières
    ------------------------------------------------------------ */
 
-/* Grain de papier très léger : réchauffe les aplats crème */
+/**
+ * Veine de bois : des bandes verticales d'opacité très faible,
+ * irrégulières, plus un grain. De près on ne voit rien ; de loin
+ * la surface cesse d'être un aplat mort.
+ */
+.wood {
+  background-color: var(--color-wood);
+  background-image:
+    repeating-linear-gradient(
+      90deg,
+      rgba(0, 0, 0, 0.09) 0px,
+      rgba(0, 0, 0, 0) 7px,
+      rgba(255, 255, 255, 0.008) 23px,
+      rgba(0, 0, 0, 0) 41px,
+      rgba(0, 0, 0, 0.06) 62px,
+      rgba(0, 0, 0, 0) 97px
+    ),
+    radial-gradient(
+      120% 80% at 50% 0%,
+      rgba(201, 162, 39, 0.05),
+      transparent 60%
+    );
+}
+
+.wood-deep {
+  background-color: var(--color-wood-deep);
+  background-image: repeating-linear-gradient(
+    90deg,
+    rgba(0, 0, 0, 0.12) 0px,
+    rgba(0, 0, 0, 0) 9px,
+    rgba(255, 255, 255, 0.007) 29px,
+    rgba(0, 0, 0, 0) 53px,
+    rgba(0, 0, 0, 0.08) 79px,
+    rgba(0, 0, 0, 0) 118px
+  );
+}
+
+/* Grain fin, posé par-dessus */
 .grain::after {
   content: "";
   position: absolute;
   inset: 0;
   pointer-events: none;
-  opacity: 0.4;
-  mix-blend-mode: multiply;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)' opacity='0.22'/%3E%3C/svg%3E");
+  opacity: 0.3;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)' opacity='0.3'/%3E%3C/svg%3E");
 }
 
-/* Cadre « hublot » : l'anneau de laiton des fenêtres de la salle */
-.porthole {
-  border-radius: 9999px;
-  box-shadow:
-    0 0 0 3px var(--color-cream),
-    0 0 0 9px var(--color-brass),
-    0 0 0 10px rgba(51, 36, 26, 0.35),
-    0 26px 60px -18px rgba(32, 25, 20, 0.55);
+/**
+ * Filet d'or en retrait du bord, comme le cadre gravé d'une carte.
+ * Pur décor, donc jamais lu par les lecteurs d'écran.
+ */
+.gold-frame::before {
+  content: "";
+  position: absolute;
+  inset: 22px;
+  border: 1px solid rgba(201, 162, 39, 0.4);
+  pointer-events: none;
 }
 
-/* Filet décoratif entre deux titres */
-.rule-brass {
+@media (min-width: 640px) {
+  .gold-frame::before {
+    inset: 34px;
+  }
+}
+
+/* Filet horizontal dégradé */
+.rule-gold {
   background: linear-gradient(
     90deg,
     transparent,
-    var(--color-brass) 18%,
-    var(--color-brass) 82%,
+    var(--color-gold) 18%,
+    var(--color-gold) 82%,
     transparent
   );
 }
 
-/* Texte d'accroche en petites capitales espacées */
+/* Petites capitales très espacées : le titrage du lieu */
 .eyebrow {
-  font-size: 12px;
-  font-weight: 600;
-  letter-spacing: 0.22em;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.32em;
   text-transform: uppercase;
 }
 
-/* Défilement horizontal infini du bandeau de spécialités */
+/* Titres : serif claire, capitales, largement espacée */
+.display {
+  font-family: var(--font-display);
+  font-weight: 400;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  line-height: 1.12;
+}
+
+/* ------------------------------------------------------------
+   Mouvements
+   ------------------------------------------------------------ */
+
 @keyframes marquee {
   from {
     transform: translateX(0);
@@ -155,33 +219,24 @@ body {
   }
 }
 .animate-marquee {
-  animation: marquee 38s linear infinite;
+  animation: marquee 44s linear infinite;
 }
 .marquee-host:hover .animate-marquee {
   animation-play-state: paused;
 }
 
-/* Ondulation lente de la ligne d'eau sous le héros */
-@keyframes drift {
-  from {
-    transform: translateX(0);
-  }
-  to {
-    transform: translateX(-50%);
-  }
-}
-.animate-drift {
-  animation: drift 24s linear infinite;
-}
-
-/* Reflet qui traverse les boutons principaux */
-@keyframes sheen {
-  0% {
-    transform: translateX(-120%) skewX(-18deg);
-  }
+/* Lueur qui respire sous la coulée de fromage */
+@keyframes glow {
+  0%,
   100% {
-    transform: translateX(260%) skewX(-18deg);
+    opacity: 0.35;
   }
+  50% {
+    opacity: 0.6;
+  }
+}
+.animate-glow {
+  animation: glow 7s ease-in-out infinite;
 }
 
 /* Masquage progressif des bords d'un rail horizontal */
@@ -193,16 +248,6 @@ body {
     #000 calc(100% - 28px),
     transparent
   );
-}
-
-/* Sections sombres : inverse la palette sans dupliquer les classes */
-.on-dark {
-  color: var(--color-sand);
-}
-.on-dark h1,
-.on-dark h2,
-.on-dark h3 {
-  color: var(--color-cream);
 }
 
 /* ------------------------------------------------------------
@@ -222,7 +267,7 @@ body {
 }
 
 /* ------------------------------------------------------------
-   Impression : la carte doit sortir proprement sur papier
+   Impression : la carte doit sortir lisible sur papier blanc
    ------------------------------------------------------------ */
 @media print {
   .no-print {
@@ -230,6 +275,11 @@ body {
   }
   body {
     background: #fff;
+    color: #000;
     font-size: 12px;
+  }
+  .wood,
+  .wood-deep {
+    background: #fff !important;
   }
 }

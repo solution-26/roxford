@@ -49,13 +49,13 @@ export function Gallery({ images }: { images: GalleryImage[] }) {
   return (
     <section
       id="galerie"
-      className="relative overflow-hidden bg-night py-20 sm:py-28 lg:py-32"
+      className="relative overflow-hidden wood-deep py-20 sm:py-28 lg:py-32"
     >
       <div className="mx-auto max-w-[1180px] px-4 sm:px-6 lg:px-9">
         <div className="mb-14 flex flex-wrap items-end justify-between gap-6">
           <div>
             <motion.p
-              className="eyebrow text-brass"
+              className="eyebrow text-gold"
               initial={{ opacity: 0, y: 12 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
@@ -73,7 +73,7 @@ export function Gallery({ images }: { images: GalleryImage[] }) {
               L&apos;ambiance du lieu
             </motion.h2>
           </div>
-          <p className="max-w-xs text-sm text-sand/60">
+          <p className="max-w-xs text-sm text-cream-dim/60">
             Cliquez sur une photo pour l&apos;agrandir.
           </p>
         </div>
@@ -88,7 +88,7 @@ export function Gallery({ images }: { images: GalleryImage[] }) {
               key={image.id}
               type="button"
               onClick={() => setIndex(i)}
-              className={`group relative overflow-hidden rounded-2xl ring-1 ring-cream/10 transition-all duration-500 hover:ring-brass/60 ${
+              className={`group relative overflow-hidden rounded-2xl ring-1 ring-gold/15 transition-all duration-500 hover:ring-gold/60 ${
                 mosaic && i === 0
                   ? "col-span-2 row-span-2 aspect-square"
                   : mosaic
@@ -108,7 +108,7 @@ export function Gallery({ images }: { images: GalleryImage[] }) {
                 className="object-cover transition-transform duration-[900ms] group-hover:scale-[1.07]"
                 unoptimized={image.url.startsWith("http")}
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-night/85 via-night/10 to-transparent opacity-80 transition-opacity duration-500 group-hover:opacity-100" />
+              <div className="absolute inset-0 bg-gradient-to-t from-wood-deep/90 via-wood-deep/10 to-transparent opacity-80 transition-opacity duration-500 group-hover:opacity-100" />
               {image.caption && (
                 <span className="absolute inset-x-0 bottom-0 translate-y-1 p-4 text-left text-sm font-medium text-cream opacity-0 transition-all duration-500 group-hover:translate-y-0 group-hover:opacity-100">
                   {image.caption}
@@ -123,7 +123,7 @@ export function Gallery({ images }: { images: GalleryImage[] }) {
       <AnimatePresence>
         {index !== null && (
           <motion.div
-            className="fixed inset-0 z-[70] flex items-center justify-center bg-night/95 p-4 backdrop-blur-sm sm:p-8"
+            className="fixed inset-0 z-[70] flex items-center justify-center bg-wood-deep/95 p-4 backdrop-blur-sm sm:p-8"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -137,7 +137,7 @@ export function Gallery({ images }: { images: GalleryImage[] }) {
               type="button"
               onClick={close}
               aria-label="Fermer"
-              className="absolute right-4 top-4 rounded-full border border-cream/20 p-3 text-cream/80 transition-colors hover:bg-cream/10 hover:text-cream sm:right-7 sm:top-7"
+              className="absolute right-4 top-4 rounded-full border border-gold/30 p-3 text-cream-dim/80 transition-colors hover:bg-gold/10 hover:text-cream sm:right-7 sm:top-7"
             >
               <X size={22} />
             </button>
@@ -169,7 +169,7 @@ export function Gallery({ images }: { images: GalleryImage[] }) {
                 />
               </div>
               {images[index].caption && (
-                <figcaption className="mt-4 text-center text-sm text-sand/75">
+                <figcaption className="mt-4 text-center text-sm text-cream-dim/70">
                   {images[index].caption}
                 </figcaption>
               )}
@@ -197,7 +197,7 @@ function NavButton({
         e.stopPropagation();
         onClick();
       }}
-      className={`absolute top-1/2 z-10 -translate-y-1/2 rounded-full border border-cream/20 bg-night/50 p-3 text-cream/80 backdrop-blur transition-colors hover:bg-cream/15 hover:text-cream ${
+      className={`absolute top-1/2 z-10 -translate-y-1/2 rounded-full border border-gold/30 bg-wood-deep/60 p-3 text-cream-dim/80 backdrop-blur transition-colors hover:bg-gold/15 hover:text-cream ${
         side === "left" ? "left-3 sm:left-7" : "right-3 sm:right-7"
       }`}
     >

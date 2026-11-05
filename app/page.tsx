@@ -1,5 +1,4 @@
-import { About } from "@/components/site/About";
-import { CheeseBand } from "@/components/site/CheeseBand";
+import { CheeseCore } from "@/components/site/CheeseCore";
 import { CheeseDrip } from "@/components/site/Cheese";
 import { Footer } from "@/components/site/Footer";
 import { Gallery } from "@/components/site/Gallery";
@@ -73,13 +72,7 @@ export default async function HomePage() {
       <main>
         <Hero settings={settings} openLabel={label} isOpen={isOpen} />
         <Marquee items={marqueeItems} />
-        <About settings={settings} />
-
-        <CheeseDrip
-          from="var(--color-cream)"
-          background="var(--color-night)"
-        />
-        <CheeseBand />
+        <CheeseCore />
 
         {/*
           Sur mobile la carte complète rendrait la page interminable :
@@ -103,6 +96,8 @@ export default async function HomePage() {
           </div>
         </section>
 
+        {/* Une coulée sépare la carte de la salle */}
+        <CheeseDrip background="var(--color-wood-deep)" />
         <Gallery images={gallery} />
         <Visit
           settings={settings}

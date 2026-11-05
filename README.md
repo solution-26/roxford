@@ -5,9 +5,10 @@ permet au propriétaire de changer le nom, le logo, les horaires, les photos
 et toute la carte sans toucher au code.
 
 - **Stack** : Next.js 15 (App Router) · React 19 · Tailwind CSS v4 · Motion · Supabase
-- **Design** : système « cafe » d'[open-design](https://github.com/nexu-io/open-design),
-  retravaillé en « maritime chaleureux » d'après le décor de la salle
-  (noyer, laiton, crème, turquoise des aquariums)
+- **Design** : bois espresso sur toute la page, filets d'or, serif claire en
+  capitales largement espacées (Cormorant Garamond). Le fromage fondu sert de
+  liant visuel : grande coulée sous le héros, coulées fines entre les
+  sections. Base : système « cafe » d'[open-design](https://github.com/nexu-io/open-design).
 
 ---
 
@@ -175,6 +176,12 @@ Le code ne contient aucune donnée en dur : tout vient de la base.
   d'accueil ; sur mobile, où elle rendrait la page interminable, l'accueil
   n'affiche qu'un aperçu renvoyant vers `/carte`. Même ancre `#carte`,
   contenu responsive — voir [`app/page.tsx`](app/page.tsx).
-- **Photo de la bande fromage** : Brelyn Bashrum via Unsplash
-  (`public/photos/fromage-filant.jpg`), licence libre y compris commerciale.
-  À remplacer par une photo du restaurant dès qu'elle est disponible.
+- **Photos de fromage** (Unsplash, licence libre y compris commerciale) :
+  `fromage-filant.jpg` Brelyn Bashrum · `fondue.jpg` Andri Aeschlimann ·
+  `gratin.jpg` Lee Milo · `raclette.jpg` Ahmet Koç. À remplacer par des
+  photos du restaurant dès qu'elles sont disponibles — les photos de la
+  salle (`salle-*.png`, `vitrine-marine.png`) sont déjà les siennes.
+- **Deux palettes cohabitent** : le site public est sombre (bois et or), et
+  `/admin` reste clair, un back-office se saisissant mieux sur fond clair.
+  Les deux jeux de jetons sont déclarés dans
+  [`app/globals.css`](app/globals.css).

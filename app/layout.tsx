@@ -1,13 +1,14 @@
 import type { Metadata, Viewport } from "next";
-import { DM_Sans, Fraunces } from "next/font/google";
+import { Cormorant_Garamond, DM_Sans } from "next/font/google";
 import "./globals.css";
 import { getSiteContent } from "@/lib/data";
 
-const fraunces = Fraunces({
+// Serif claire, à l'aise en capitales très espacées : le titrage du lieu.
+const cormorant = Cormorant_Garamond({
   subsets: ["latin"],
-  variable: "--font-fraunces",
+  variable: "--font-cormorant",
   display: "swap",
-  axes: ["SOFT", "WONK"],
+  weight: ["300", "400", "500", "600"],
 });
 
 const dmSans = DM_Sans({
@@ -17,7 +18,7 @@ const dmSans = DM_Sans({
 });
 
 export const viewport: Viewport = {
-  themeColor: "#2e7d7b",
+  themeColor: "#241810",
   width: "device-width",
   initialScale: 1,
 };
@@ -70,7 +71,7 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="fr" className={`${fraunces.variable} ${dmSans.variable}`}>
+    <html lang="fr" className={`${cormorant.variable} ${dmSans.variable}`}>
       <body>{children}</body>
     </html>
   );

@@ -41,8 +41,10 @@ export function Logo({
     );
   }
 
-  const badge = tone === "light" ? "#fbf6ee" : "#201914";
-  const mark = tone === "light" ? "#201914" : "#fbf6ee";
+  // « light » = posé sur le bois sombre : écusson presque transparent,
+  // tracé à l'or. « dark » = posé sur fond clair (l'administration).
+  const badge = tone === "light" ? "#1b1109" : "#201914";
+  const mark = tone === "light" ? "#c9a227" : "#f2e7d6";
 
   return (
     <svg

@@ -41,25 +41,25 @@ export default async function CartePage() {
 
       <main>
         {/* En-tête court : la page doit arriver vite sur les plats. */}
-        <section className="bg-night pb-10 pt-28 sm:pb-14 sm:pt-32">
+        <section className="wood-deep grain relative pb-10 pt-28 sm:pb-14 sm:pt-32">
           <div className="mx-auto max-w-[1180px] px-4 sm:px-6 lg:px-9">
             <Link
               href="/"
-              className="inline-flex items-center gap-2 text-sm font-medium text-cream/60 underline-offset-4 transition-colors hover:text-cream hover:underline"
+              className="inline-flex items-center gap-2 text-[11px] uppercase tracking-[0.16em] text-cream-dim/60 underline-offset-4 transition-colors hover:text-gold-soft hover:underline"
             >
               <ArrowLeft size={15} />
               {settings.restaurant_name}
             </Link>
 
-            <h1 className="mt-5 font-display text-[clamp(2.4rem,8vw,4rem)] font-semibold leading-[1.02] tracking-[-0.035em] text-cream">
+            <h1 className="display mt-6 text-[clamp(2.1rem,7vw,3.6rem)] font-light text-cream">
               La carte
             </h1>
 
-            <div className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-3 text-sm text-cream/65">
+            <div className="mt-7 flex flex-wrap items-center gap-x-7 gap-y-3 text-[13px] text-cream-dim/70">
               <span className="inline-flex items-center gap-2">
                 <span
                   className={`h-1.5 w-1.5 rounded-full ${
-                    isOpen ? "bg-emerald-400" : "bg-brass-soft"
+                    isOpen ? "bg-cheese" : "bg-muted"
                   }`}
                 />
                 {label}
@@ -67,7 +67,7 @@ export default async function CartePage() {
               {settings.price_range && (
                 <span>
                   Budget{" "}
-                  <span className="font-semibold text-cream/90">
+                  <span className="text-cream">
                     {settings.price_range}
                   </span>
                 </span>
@@ -75,7 +75,7 @@ export default async function CartePage() {
               {telHref && (
                 <a
                   href={telHref}
-                  className="inline-flex items-center gap-2 font-semibold text-brass-soft underline-offset-4 hover:underline"
+                  className="inline-flex items-center gap-2 font-medium text-gold-soft underline-offset-4 hover:underline"
                 >
                   <Phone size={14} />
                   {settings.phone}

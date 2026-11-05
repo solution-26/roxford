@@ -1,15 +1,20 @@
 "use client";
 
-import { AnimatePresence, motion, useScroll, useMotionValueEvent } from "motion/react";
+import {
+  AnimatePresence,
+  motion,
+  useMotionValueEvent,
+  useScroll,
+} from "motion/react";
 import { Menu, Phone, X } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { Logo } from "./Logo";
 
 const LINKS = [
-  { hash: "#maison", label: "La maison" },
+  { hash: "#fromage", label: "Le fromage" },
   { hash: "#carte", label: "La carte" },
-  { hash: "#galerie", label: "Galerie" },
+  { hash: "#galerie", label: "La salle" },
   { hash: "#visite", label: "Nous trouver" },
 ];
 
@@ -46,8 +51,8 @@ export function Header({
       <header
         className={`no-print fixed inset-x-0 top-0 z-50 transition-all duration-500 ${
           condensed
-            ? "border-b border-line/70 bg-cream/90 py-2 shadow-[0_8px_30px_-18px_rgba(32,25,20,0.5)] backdrop-blur-xl"
-            : "border-b border-transparent py-4"
+            ? "border-b border-gold/20 bg-wood-deep/92 py-2 backdrop-blur-xl"
+            : "border-b border-transparent py-5"
         }`}
       >
         <div className="mx-auto flex max-w-[1180px] items-center gap-4 px-4 sm:px-6 lg:px-9">
@@ -59,31 +64,23 @@ export function Header({
             <Logo
               name={name}
               logoUrl={logoUrl}
-              size={condensed ? 34 : 42}
-              tone={condensed ? "dark" : "light"}
+              size={condensed ? 30 : 36}
+              tone="light"
             />
-            <span
-              className={`font-display text-xl font-semibold tracking-tight transition-colors duration-500 ${
-                condensed ? "text-ink" : "text-cream"
-              }`}
-            >
+            <span className="display text-[15px] font-normal text-cream">
               {name}
             </span>
           </a>
 
-          <nav className="ml-auto hidden items-center gap-1 md:flex">
+          <nav className="ml-auto hidden items-center gap-7 md:flex">
             {LINKS.map((l) => (
               <a
                 key={l.hash}
                 href={resolve(l.hash, onHome)}
-                className={`group relative rounded-full px-4 py-2 text-sm font-medium transition-colors duration-300 ${
-                  condensed
-                    ? "text-ink-2 hover:text-walnut"
-                    : "text-cream/85 hover:text-cream"
-                }`}
+                className="group relative py-1 text-[11px] font-medium uppercase tracking-[0.18em] text-cream-dim/75 transition-colors duration-300 hover:text-gold-soft"
               >
                 {l.label}
-                <span className="absolute inset-x-4 -bottom-px h-px origin-left scale-x-0 bg-brass transition-transform duration-300 group-hover:scale-x-100" />
+                <span className="absolute inset-x-0 -bottom-0.5 h-px origin-left scale-x-0 bg-gold transition-transform duration-400 group-hover:scale-x-100" />
               </a>
             ))}
           </nav>
@@ -91,13 +88,9 @@ export function Header({
           {telHref && (
             <a
               href={telHref}
-              className={`ml-auto inline-flex items-center gap-2 rounded-full px-4 py-2.5 text-sm font-semibold transition-all duration-300 md:ml-2 ${
-                condensed
-                  ? "bg-walnut text-cream hover:bg-walnut-deep"
-                  : "bg-cream/15 text-cream ring-1 ring-cream/35 backdrop-blur-md hover:bg-cream/25"
-              }`}
+              className="ml-auto inline-flex items-center gap-2 border border-gold/45 px-4 py-2.5 text-[11px] font-medium uppercase tracking-[0.16em] text-gold-pale transition-colors duration-300 hover:border-gold hover:bg-gold/10 md:ml-0"
             >
-              <Phone size={15} strokeWidth={2.4} />
+              <Phone size={13} strokeWidth={2} />
               <span className="hidden sm:inline">{phone}</span>
               <span className="sm:hidden">Appeler</span>
             </a>
@@ -107,11 +100,7 @@ export function Header({
             type="button"
             onClick={() => setOpen(true)}
             aria-label="Ouvrir le menu"
-            className={`rounded-full p-2.5 transition-colors md:hidden ${
-              condensed
-                ? "text-ink hover:bg-sand"
-                : "text-cream hover:bg-cream/15"
-            }`}
+            className="p-2 text-cream transition-colors hover:text-gold-soft md:hidden"
           >
             <Menu size={22} />
           </button>
@@ -128,28 +117,26 @@ export function Header({
             transition={{ duration: 0.25 }}
           >
             <div
-              className="absolute inset-0 bg-night/70 backdrop-blur-sm"
+              className="absolute inset-0 bg-wood-deep/80 backdrop-blur-sm"
               onClick={() => setOpen(false)}
             />
             <motion.nav
-              className="absolute inset-y-0 right-0 flex w-[min(20rem,85vw)] flex-col gap-2 bg-cream p-6 shadow-2xl"
+              className="wood-deep absolute inset-y-0 right-0 flex w-[min(20rem,86vw)] flex-col gap-1 border-l border-gold/20 p-6"
               initial={{ x: "100%" }}
               animate={{ x: 0 }}
               exit={{ x: "100%" }}
               transition={{ type: "spring", stiffness: 320, damping: 34 }}
             >
-              <div className="mb-6 flex items-center justify-between">
+              <div className="mb-8 flex items-center justify-between">
                 <div className="flex items-center gap-2.5">
-                  <Logo name={name} logoUrl={logoUrl} size={34} />
-                  <span className="font-display text-lg font-semibold">
-                    {name}
-                  </span>
+                  <Logo name={name} logoUrl={logoUrl} size={30} tone="light" />
+                  <span className="display text-sm text-cream">{name}</span>
                 </div>
                 <button
                   type="button"
                   onClick={() => setOpen(false)}
                   aria-label="Fermer le menu"
-                  className="rounded-full p-2 text-ink-2 hover:bg-sand"
+                  className="p-2 text-cream-dim transition-colors hover:text-gold-soft"
                 >
                   <X size={20} />
                 </button>
@@ -163,7 +150,7 @@ export function Header({
                   initial={{ opacity: 0, x: 18 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: 0.08 + i * 0.06 }}
-                  className="rounded-xl px-4 py-3.5 font-display text-xl text-ink transition-colors hover:bg-sand"
+                  className="display border-b border-gold/10 py-4 text-lg font-light text-cream transition-colors hover:text-gold-soft"
                 >
                   {l.label}
                 </motion.a>
@@ -172,9 +159,9 @@ export function Header({
               {telHref && (
                 <a
                   href={telHref}
-                  className="mt-auto inline-flex items-center justify-center gap-2 rounded-full bg-walnut px-5 py-3.5 font-semibold text-cream"
+                  className="mt-auto inline-flex items-center justify-center gap-2 border border-gold/50 px-5 py-4 text-[11px] font-medium uppercase tracking-[0.18em] text-gold-pale"
                 >
-                  <Phone size={16} /> {phone}
+                  <Phone size={14} /> {phone}
                 </a>
               )}
             </motion.nav>

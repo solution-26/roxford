@@ -13,7 +13,7 @@ export function SplitText({
   text,
   className,
   highlight,
-  highlightClassName = "text-aqua",
+  highlightClassName = "text-gold-soft",
   delay = 0,
 }: {
   text: string;

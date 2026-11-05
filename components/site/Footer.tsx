@@ -1,4 +1,4 @@
-import { Facebook, Instagram, MapPin, Phone } from "lucide-react";
+import { Facebook, Instagram } from "lucide-react";
 import Link from "next/link";
 import { Logo } from "./Logo";
 import type { SiteSettings } from "@/lib/types";
@@ -10,89 +10,93 @@ export function Footer({ settings }: { settings: SiteSettings }) {
     : null;
 
   return (
-    <footer className="relative overflow-hidden bg-walnut-deep pb-10 pt-16 text-sand">
-      {/* Ligne d'eau : deux vagues décalées, en mouvement lent */}
-      <div
-        aria-hidden
-        className="no-print pointer-events-none absolute inset-x-0 top-0 h-14 overflow-hidden opacity-25"
-      >
-        <svg
-          className="animate-drift h-full w-[200%]"
-          viewBox="0 0 1200 56"
-          preserveAspectRatio="none"
-          fill="none"
-        >
-          <path
-            d="M0 34 C 150 6, 300 62, 450 34 S 750 6, 900 34 S 1200 62, 1350 34 V56 H0Z"
-            fill="#b08d57"
-            opacity="0.5"
-          />
-          <path
-            d="M0 42 C 180 18, 320 66, 520 42 S 820 18, 1020 42 S 1320 66, 1500 42 V56 H0Z"
-            fill="#2e7d7b"
-          />
-        </svg>
-      </div>
-
+    <footer className="wood-deep relative overflow-hidden border-t border-gold/20 pb-9 pt-16">
       <div className="mx-auto max-w-[1180px] px-4 sm:px-6 lg:px-9">
-        <div className="grid gap-10 border-b border-sand/15 pb-10 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="grid gap-12 pb-12 sm:grid-cols-2 lg:grid-cols-4">
+          {/* — Signature — */}
           <div className="lg:col-span-2">
             <div className="flex items-center gap-3">
               <Logo
                 name={settings.restaurant_name}
                 logoUrl={settings.logo_url}
-                size={44}
+                size={40}
                 tone="light"
               />
               <div>
-                <p className="font-display text-2xl font-semibold text-cream">
-                  {settings.restaurant_name}
+                <p className="display text-2xl font-light text-cream">
+                  {settings.restaurant_name}.
                 </p>
-                <p className="text-sm text-sand/60">{settings.tagline}</p>
+                <p className="eyebrow mt-1 text-gold/80">
+                  {settings.city ?? "Nabeul"}
+                </p>
               </div>
             </div>
-            <p className="mt-6 max-w-sm text-sm leading-relaxed text-sand/70">
+            <p className="mt-7 max-w-sm text-[13px] leading-relaxed text-cream-dim/60">
               {settings.description}
             </p>
           </div>
 
+          {/* — Adresse — */}
           <div>
-            <h3 className="eyebrow text-brass-soft">Contact</h3>
-            <ul className="mt-5 space-y-3 text-sm">
-              {telHref && (
-                <li>
-                  <a
-                    href={telHref}
-                    className="inline-flex items-center gap-2.5 text-sand/80 transition-colors hover:text-cream"
+            <h3 className="eyebrow text-gold">Adresse</h3>
+            <p className="mt-5 text-[14px] leading-relaxed text-cream-dim/75">
+              {settings.address}
+              {settings.address && settings.city && <br />}
+              {settings.city}
+            </p>
+            {settings.maps_url && (
+              <a
+                href={settings.maps_url}
+                target="_blank"
+                rel="noreferrer noopener"
+                className="mt-3 inline-block text-[11px] uppercase tracking-[0.14em] text-gold-soft underline-offset-4 hover:underline"
+              >
+                Voir le plan
+              </a>
+            )}
+          </div>
+
+          {/* — Contact — */}
+          <div>
+            <h3 className="eyebrow text-gold">Contact</h3>
+            {telHref && (
+              <a
+                href={telHref}
+                className="mt-5 block font-display text-xl font-light tracking-wide text-cream transition-colors hover:text-gold-soft"
+              >
+                {settings.phone}
+              </a>
+            )}
+
+            <ul className="mt-6 space-y-2.5 text-[13px]">
+              {[
+                ["/#fromage", "Le fromage"],
+                ["/carte", "La carte"],
+                ["/#galerie", "La salle"],
+                ["/#visite", "Nous trouver"],
+              ].map(([href, label]) => (
+                <li key={href}>
+                  <Link
+                    href={href}
+                    className="text-cream-dim/65 underline-offset-4 transition-colors hover:text-cream hover:underline"
                   >
-                    <Phone size={15} className="text-brass" />
-                    {settings.phone}
-                  </a>
+                    {label}
+                  </Link>
                 </li>
-              )}
-              {(settings.address || settings.city) && (
-                <li className="flex items-start gap-2.5 text-sand/80">
-                  <MapPin size={15} className="mt-1 shrink-0 text-brass" />
-                  <span>
-                    {settings.address}
-                    {settings.address && settings.city && <br />}
-                    {settings.city}
-                  </span>
-                </li>
-              )}
+              ))}
             </ul>
 
             {(settings.facebook_url || settings.instagram_url) && (
-              <div className="mt-6 flex gap-2.5">
+              <div className="mt-6 flex gap-2">
                 {settings.facebook_url && (
                   <a
                     href={settings.facebook_url}
                     target="_blank"
                     rel="noreferrer noopener"
                     aria-label="Facebook"
-                    className="grid h-10 w-10 place-items-center rounded-full border border-sand/20 text-sand/75 transition-all hover:border-brass hover:bg-brass/15 hover:text-cream"
+                    className="grid h-9 w-9 place-items-center border border-gold/25 text-cream-dim/70 transition-colors hover:border-gold hover:text-gold-soft"
                   >
-                    <Facebook size={17} />
+                    <Facebook size={15} />
                   </a>
                 )}
                 {settings.instagram_url && (
@@ -101,44 +105,23 @@ export function Footer({ settings }: { settings: SiteSettings }) {
                     target="_blank"
                     rel="noreferrer noopener"
                     aria-label="Instagram"
-                    className="grid h-10 w-10 place-items-center rounded-full border border-sand/20 text-sand/75 transition-all hover:border-brass hover:bg-brass/15 hover:text-cream"
+                    className="grid h-9 w-9 place-items-center border border-gold/25 text-cream-dim/70 transition-colors hover:border-gold hover:text-gold-soft"
                   >
-                    <Instagram size={17} />
+                    <Instagram size={15} />
                   </a>
                 )}
               </div>
             )}
           </div>
-
-          <div>
-            <h3 className="eyebrow text-brass-soft">Le site</h3>
-            <ul className="mt-5 space-y-3 text-sm">
-              {[
-                ["/#maison", "La maison"],
-                ["/carte", "La carte"],
-                ["/#galerie", "Galerie"],
-                ["/#visite", "Nous trouver"],
-              ].map(([href, label]) => (
-                <li key={href}>
-                  <Link
-                    href={href}
-                    className="text-sand/80 underline-offset-4 transition-colors hover:text-cream hover:underline"
-                  >
-                    {label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
         </div>
 
-        <div className="flex flex-col items-center justify-between gap-3 pt-8 text-xs text-sand/50 sm:flex-row">
+        <div className="flex flex-col items-center justify-between gap-3 border-t border-gold/15 pt-7 text-[11px] uppercase tracking-[0.14em] text-muted sm:flex-row">
           <p>
-            © {year} {settings.restaurant_name}. Tous droits réservés.
+            © {year} {settings.restaurant_name}
           </p>
           <Link
             href="/admin"
-            className="underline-offset-4 transition-colors hover:text-sand hover:underline"
+            className="underline-offset-4 transition-colors hover:text-cream-dim hover:underline"
           >
             Espace propriétaire
           </Link>
