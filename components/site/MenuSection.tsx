@@ -300,13 +300,10 @@ function Dish({
 }) {
   // Colonne de gauche sur les index pairs : le filet part vers la droite.
   const leftColumn = index % 2 === 0;
-  const hasPhoto = Boolean(item.image_url);
 
   return (
     <motion.article
-      className={`group relative border bg-wood-card/80 transition-all duration-400 hover:-translate-y-0.5 hover:bg-wood-soft/80 ${
-        hasPhoto ? "overflow-hidden" : ""
-      } ${
+      className={`group relative border bg-wood-card/80 px-5 py-4 transition-all duration-400 hover:-translate-y-0.5 hover:bg-wood-soft/80 ${
         item.is_featured
           ? "border-gold/45 shadow-[0_0_34px_-18px_rgba(232,192,106,0.55)]"
           : "border-gold/15 hover:border-gold/40"
@@ -319,59 +316,56 @@ function Dish({
       {/* Le filet qui rejoint l'arête centrale */}
       <span
         aria-hidden
-        className={`absolute top-10 hidden h-px w-12 bg-gradient-to-r from-gold/45 to-transparent lg:block ${
+        className={`absolute top-1/2 hidden h-px w-12 bg-gradient-to-r from-gold/45 to-transparent lg:block ${
           leftColumn ? "left-full" : "right-full rotate-180"
         }`}
       />
 
-      {/*
-        Une photo de plat est ce qui donne envie : quand il y en a une,
-        elle occupe toute la largeur de la carte plutôt qu'une pastille
-        de 48 px où l'on ne distingue rien.
-      */}
-      {item.image_url && (
-        <div className="relative aspect-[16/9] w-full overflow-hidden">
-          <Image
-            src={item.image_url}
-            alt={item.name}
-            fill
-            sizes="(max-width: 1024px) 100vw, 45vw"
-            className="object-cover transition-transform duration-[900ms] ease-[cubic-bezier(.2,0,0,1)] group-hover:scale-[1.04]"
-            unoptimized
-          />
-          <span className="pointer-events-none absolute inset-0 bg-gradient-to-t from-wood-card/70 to-transparent" />
-        </div>
-      )}
-
-      <div className="px-5 py-4">
-        <div className="flex items-baseline gap-3">
-          <h4 className="font-display text-[17px] font-medium tracking-wide text-cream">
-            {item.name}
-          </h4>
-
-          {item.is_featured && (
-            <span className="shrink-0 text-[9px] font-semibold uppercase tracking-[0.18em] text-gold">
-              Signature
-            </span>
-          )}
-
-          <span
-            aria-hidden
-            className="mx-1 hidden h-px flex-1 self-center border-b border-dotted border-gold/20 sm:block"
-          />
-
-          <span className="ml-auto sm:ml-0">
-            <Price item={item} currency={currency} />
-          </span>
-        </div>
-
-        {item.description && (
-          <p className="mt-1 text-[13px] leading-relaxed text-cream-dim/60">
-            {item.description}
-          </p>
+      <div className="flex items-start gap-4">
+        {/* Vignette ronde : la photo reste un repère, pas le sujet. */}
+        {item.image_url && (
+          <div className="relative h-12 w-12 shrink-0 overflow-hidden rounded-full ring-1 ring-gold/35">
+            <Image
+              src={item.image_url}
+              alt={item.name}
+              fill
+              sizes="48px"
+              className="object-cover"
+              unoptimized
+            />
+          </div>
         )}
 
-        <Tags tags={item.tags} />
+        <div className="min-w-0 flex-1">
+          <div className="flex items-baseline gap-3">
+            <h4 className="font-display text-[17px] font-medium tracking-wide text-cream">
+              {item.name}
+            </h4>
+
+            {item.is_featured && (
+              <span className="shrink-0 text-[9px] font-semibold uppercase tracking-[0.18em] text-gold">
+                Signature
+              </span>
+            )}
+
+            <span
+              aria-hidden
+              className="mx-1 hidden h-px flex-1 self-center border-b border-dotted border-gold/20 sm:block"
+            />
+
+            <span className="ml-auto sm:ml-0">
+              <Price item={item} currency={currency} />
+            </span>
+          </div>
+
+          {item.description && (
+            <p className="mt-1 text-[13px] leading-relaxed text-cream-dim/60">
+              {item.description}
+            </p>
+          )}
+
+          <Tags tags={item.tags} />
+        </div>
       </div>
     </motion.article>
   );

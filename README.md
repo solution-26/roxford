@@ -103,7 +103,7 @@ Accessible sur **`//admin`** (lien discret en bas du site).
 | Onglet | Ce qu'on y fait |
 |---|---|
 | **Établissement** | Nom, accroche, présentation, logo, photo d'accueil, téléphone, adresse, liens Maps / Facebook / Instagram, budget, devise, horaires jour par jour, services |
-| **La carte** | Catégories (créer, renommer, réordonner, masquer) et plats (nom, description, prix, photo, disponibilité, « spécialité ») |
+| **La carte** | Catégories (créer, renommer, réordonner, masquer) et plats (nom, description, prix, tailles, photo, étiquettes, disponibilité, mise en avant) |
 | **Galerie** | Téléverser, légender, réordonner et supprimer les photos |
 
 Points utiles :
