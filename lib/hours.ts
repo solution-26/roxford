@@ -93,6 +93,24 @@ export function getOpenState(hours: DayHours[], date = new Date()): OpenState {
     : minutes >= open && minutes < close;
 
   if (isOpen) {
+    // Minutes restantes, en tenant compte d'un service qui passe minuit.
+    const remaining = overnight && minutes >= open
+      ? close + 24 * 60 - minutes
+      : close - minutes;
+
+    // Dans la dernière heure, le compte à rebours est plus utile que
+    // l'heure de fermeture : il évite à quelqu'un de se déplacer pour rien.
+    if (remaining <= 60) {
+      return {
+        isOpen: true,
+        label:
+          remaining <= 1
+            ? "Ouvert · ferme dans un instant"
+            : `Ouvert · ferme dans ${remaining} min`,
+        todayIndex: dayIndex,
+      };
+    }
+
     return {
       isOpen: true,
       label: `Ouvert · ferme à ${today.close}`,

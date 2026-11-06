@@ -175,6 +175,12 @@ Le code ne contient aucune donnée en dur : tout vient de la base.
   Suppléments, Extra, Boissons et Menu Enfant figurent sur la carte
   intérieure, dont aucune photo lisible n'était disponible. À saisir depuis
   `/admin`.
+- **Pas d'onglet « Tout » dans la carte** : 45 plats d'un seul tenant ne se
+  lisent pas. On ouvre sur une catégorie — celle du fragment quand on arrive
+  par `/carte#pizzas`, la première sinon.
+- **Les photos de la salle sont en WebP** (5,9 Mo → 1,1 Mo pour tout le
+  dossier). `lib/data.ts` réécrit à la lecture les anciennes références
+  `.png` restées en base, pour qu'aucune migration ne soit nécessaire.
 - **La carte a deux emplacements.** Sur grand écran elle reste sur la page
   d'accueil ; sur mobile, où elle rendrait la page interminable, l'accueil
   n'affiche qu'un aperçu renvoyant vers `/carte`. Même ancre `#carte`,

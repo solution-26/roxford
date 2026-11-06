@@ -24,7 +24,7 @@ export const seedSettings: SiteSettings = {
   description:
     "Au cœur de Nabeul, Roxford fait du fromage sa signature : pizzas gratinées, sandwichs fondants et gratins généreux, servis dans une salle à l'esprit marin — boiseries chaudes, hublots de laiton et aquariums.",
   logo_url: null,
-  hero_image_url: "/photos/salle-3.png",
+  hero_image_url: "/photos/salle-3.webp",
   phone: "53 288 222",
   address: "CPV8+V57",
   city: "Nabeul",
@@ -155,8 +155,8 @@ export const seedProducts: Product[] = [
 ];
 
 export const seedGallery: GalleryImage[] = [
-  { id: "g1", url: "/photos/salle-1.png", caption: "La salle et ses hublots de bois", sort_order: 10 },
-  { id: "g2", url: "/photos/salle-2.png", caption: "Boiseries, laiton et lustres de papier", sort_order: 20 },
-  { id: "g3", url: "/photos/salle-3.png", caption: "Les banquettes face aux aquariums", sort_order: 30 },
-  { id: "g4", url: "/photos/vitrine-marine.png", caption: "La vitrine d'objets marins", sort_order: 40 },
+  { id: "g1", url: "/photos/salle-1.webp", caption: "La salle et ses hublots de bois", sort_order: 10 },
+  { id: "g2", url: "/photos/salle-2.webp", caption: "Boiseries, laiton et lustres de papier", sort_order: 20 },
+  { id: "g3", url: "/photos/salle-3.webp", caption: "Les banquettes face aux aquariums", sort_order: 30 },
+  { id: "g4", url: "/photos/vitrine-marine.webp", caption: "La vitrine d'objets marins", sort_order: 40 },
 ];

@@ -534,6 +534,11 @@ export default function MenuAdminPage() {
             onChange={(url) => setEditing({ ...editing, image_url: url })}
           />
 
+          <TagEditor
+            tags={editing.tags ?? []}
+            onChange={(tags) => setEditing({ ...editing, tags })}
+          />
+
           <div className="flex flex-wrap gap-6 pt-1">
             <Toggle
               checked={editing.is_available ?? true}
@@ -548,6 +553,98 @@ export default function MenuAdminPage() {
           </div>
         </Modal>
       )}
+    </div>
+  );
+}
+
+/** Suggestions courantes, pour éviter d'avoir à tout retaper. */
+const TAG_SUGGESTIONS = [
+  "Nouveau",
+  "Épicé",
+  "Végétarien",
+  "Fait maison",
+  "Fromage",
+  "Poisson",
+];
+
+/**
+ * Étiquettes d'un plat. Elles s'affichent sous son nom sur la carte.
+ * Stockées dans products.tags, qui existait déjà sans être exploité.
+ */
+function TagEditor({
+  tags,
+  onChange,
+}: {
+  tags: string[];
+  onChange: (tags: string[]) => void;
+}) {
+  const [draft, setDraft] = useState("");
+
+  const add = (value: string) => {
+    const clean = value.trim();
+    if (!clean || tags.includes(clean)) return;
+    onChange([...tags, clean]);
+    setDraft("");
+  };
+
+  return (
+    <div>
+      <span className="mb-1.5 block text-sm font-semibold text-ink">
+        Étiquettes (facultatif)
+      </span>
+
+      {tags.length > 0 && (
+        <ul className="mb-3 flex flex-wrap gap-2">
+          {tags.map((tag) => (
+            <li
+              key={tag}
+              className="inline-flex items-center gap-1.5 rounded-full bg-sand px-3 py-1.5 text-sm font-medium text-walnut"
+            >
+              {tag}
+              <button
+                type="button"
+                aria-label={`Retirer ${tag}`}
+                onClick={() => onChange(tags.filter((t) => t !== tag))}
+                className="rounded-full p-0.5 text-walnut/60 transition-colors hover:bg-walnut/15 hover:text-walnut"
+              >
+                <X size={13} />
+              </button>
+            </li>
+          ))}
+        </ul>
+      )}
+
+      <div className="flex gap-2">
+        <Input
+          value={draft}
+          onChange={(e) => setDraft(e.target.value)}
+          onKeyDown={(e) => {
+            // Entrée ajoute l'étiquette sans soumettre le formulaire.
+            if (e.key === "Enter") {
+              e.preventDefault();
+              add(draft);
+            }
+          }}
+          placeholder="Ex. Épicé"
+          className="max-w-xs"
+        />
+        <Button type="button" variant="ghost" onClick={() => add(draft)}>
+          <Plus size={14} /> Ajouter
+        </Button>
+      </div>
+
+      <div className="mt-2.5 flex flex-wrap gap-1.5">
+        {TAG_SUGGESTIONS.filter((t) => !tags.includes(t)).map((tag) => (
+          <button
+            key={tag}
+            type="button"
+            onClick={() => add(tag)}
+            className="rounded-full border border-line px-2.5 py-1 text-xs text-muted transition-colors hover:border-aqua hover:text-aqua"
+          >
+            + {tag}
+          </button>
+        ))}
+      </div>
     </div>
   );
 }

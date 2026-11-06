@@ -12,6 +12,7 @@ import { MapPin, Phone } from "lucide-react";
 import { useRef } from "react";
 import type { SiteSettings } from "@/lib/types";
 import { CheeseHaze, CheesePour } from "./Cheese";
+import { OpenBadge } from "./OpenState";
 
 const ease = [0.2, 0, 0, 1] as const;
 
@@ -35,7 +36,7 @@ export function Hero({
   const contentY = useTransform(scrollYProgress, [0, 1], ["0%", "22%"]);
   const contentOpacity = useTransform(scrollYProgress, [0, 0.7], [1, 0]);
 
-  const hero = settings.hero_image_url ?? "/photos/salle-3.png";
+  const hero = settings.hero_image_url ?? "/photos/salle-3.webp";
   const telHref = settings.phone
     ? `tel:${settings.phone.replace(/\s+/g, "")}`
     : null;
@@ -88,19 +89,11 @@ export function Hero({
         animate="shown"
       >
         <motion.p variants={item} className="eyebrow text-gold-soft">
-          <span className="inline-flex items-center gap-2.5">
-            <span className="relative flex h-1.5 w-1.5">
-              {isOpen && (
-                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-cheese opacity-70" />
-              )}
-              <span
-                className={`relative inline-flex h-1.5 w-1.5 rounded-full ${
-                  isOpen ? "bg-cheese" : "bg-muted"
-                }`}
-              />
-            </span>
-            {openLabel}
-          </span>
+          <OpenBadge
+            hours={settings.hours}
+            initialIsOpen={isOpen}
+            initialLabel={openLabel}
+          />
         </motion.p>
 
         <motion.h1

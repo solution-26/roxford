@@ -1,5 +1,6 @@
 import { CheeseCore } from "@/components/site/CheeseCore";
 import { CheeseDrip } from "@/components/site/Cheese";
+import { CallFab } from "@/components/site/CallFab";
 import { Footer } from "@/components/site/Footer";
 import { Gallery } from "@/components/site/Gallery";
 import { Header } from "@/components/site/Header";
@@ -107,6 +108,7 @@ export default async function HomePage() {
         />
       </main>
 
+      <CallFab phone={settings.phone} />
       <Footer settings={settings} />
     </>
   );

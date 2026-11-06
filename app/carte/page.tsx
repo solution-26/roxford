@@ -1,9 +1,11 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowLeft, Phone } from "lucide-react";
+import { CallFab } from "@/components/site/CallFab";
 import { Footer } from "@/components/site/Footer";
 import { Header } from "@/components/site/Header";
 import { MenuSection } from "@/components/site/MenuSection";
+import { OpenBadge } from "@/components/site/OpenState";
 import { ScrollProgress } from "@/components/site/ScrollProgress";
 import { getSiteContent } from "@/lib/data";
 import { getOpenState } from "@/lib/hours";
@@ -56,14 +58,11 @@ export default async function CartePage() {
             </h1>
 
             <div className="mt-7 flex flex-wrap items-center gap-x-7 gap-y-3 text-[13px] text-cream-dim/70">
-              <span className="inline-flex items-center gap-2">
-                <span
-                  className={`h-1.5 w-1.5 rounded-full ${
-                    isOpen ? "bg-cheese" : "bg-muted"
-                  }`}
-                />
-                {label}
-              </span>
+              <OpenBadge
+                hours={settings.hours}
+                initialIsOpen={isOpen}
+                initialLabel={label}
+              />
               {settings.price_range && (
                 <span>
                   Budget{" "}
@@ -93,6 +92,7 @@ export default async function CartePage() {
         />
       </main>
 
+      <CallFab phone={settings.phone} />
       <Footer settings={settings} />
     </>
   );

@@ -8,7 +8,7 @@ import {
 } from "motion/react";
 import { Menu, Phone, X } from "lucide-react";
 import { usePathname } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Logo } from "./Logo";
 
 const LINKS = [
@@ -43,6 +43,37 @@ export function Header({
 
   useMotionValueEvent(scrollY, "change", (y) => setCondensed(y > 40));
 
+  /**
+   * Section à l'écran, pour allumer le lien correspondant.
+   * Uniquement sur l'accueil : ailleurs les liens quittent la page.
+   */
+  const [current, setCurrent] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!onHome) return;
+
+    const ids = LINKS.map((l) => l.hash.slice(1));
+    const sections = ids
+      .map((id) => document.getElementById(id))
+      .filter((el): el is HTMLElement => el !== null);
+    if (sections.length === 0) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        // La section la plus visible l'emporte : plusieurs peuvent se
+        // croiser à l'écran pendant le défilement.
+        const best = entries
+          .filter((e) => e.isIntersecting)
+          .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+        if (best) setCurrent(best.target.id);
+      },
+      { rootMargin: "-45% 0px -45% 0px", threshold: [0, 0.25, 0.5, 1] },
+    );
+
+    sections.forEach((el) => observer.observe(el));
+    return () => observer.disconnect();
+  }, [onHome]);
+
   const telHref = phone ? `tel:${phone.replace(/\s+/g, "")}` : null;
 
   return (
@@ -76,10 +107,21 @@ export function Header({
               <a
                 key={l.hash}
                 href={resolve(l.hash, onHome)}
-                className="group relative py-1 text-[11px] font-medium uppercase tracking-[0.18em] text-cream-dim/75 transition-colors duration-300 hover:text-gold-soft"
+                aria-current={
+                  current === l.hash.slice(1) ? "location" : undefined
+                }
+                className={`group relative py-1 text-[11px] font-medium uppercase tracking-[0.18em] transition-colors duration-300 hover:text-gold-soft ${
+                  current === l.hash.slice(1)
+                    ? "text-gold-soft"
+                    : "text-cream-dim/75"
+                }`}
               >
                 {l.label}
-                <span className="absolute inset-x-0 -bottom-0.5 h-px origin-left scale-x-0 bg-gold transition-transform duration-400 group-hover:scale-x-100" />
+                <span
+                  className={`absolute inset-x-0 -bottom-0.5 h-px origin-left bg-gold transition-transform duration-400 group-hover:scale-x-100 ${
+                    current === l.hash.slice(1) ? "scale-x-100" : "scale-x-0"
+                  }`}
+                />
               </a>
             ))}
           </nav>

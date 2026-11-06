@@ -311,10 +311,10 @@ on conflict do nothing;
 
 -- -- Galerie (photos de la salle fournies par le restaurant)
 insert into public.gallery_images (url, caption, sort_order) values
-  ('/photos/salle-1.png',        'La salle et ses hublots de bois',        10),
-  ('/photos/salle-2.png',        'Boiseries, laiton et lustres de papier', 20),
-  ('/photos/salle-3.png',        'Les banquettes face aux aquariums',      30),
-  ('/photos/vitrine-marine.png', 'La vitrine d''objets marins',            40)
+  ('/photos/salle-1.webp',        'La salle et ses hublots de bois',        10),
+  ('/photos/salle-2.webp',        'Boiseries, laiton et lustres de papier', 20),
+  ('/photos/salle-3.webp',        'Les banquettes face aux aquariums',      30),
+  ('/photos/vitrine-marine.webp', 'La vitrine d''objets marins',            40)
 on conflict do nothing;
 
 -- ============================================================

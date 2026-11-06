@@ -15,6 +15,17 @@ import type {
   SiteSettings,
 } from "./types";
 
+/**
+ * Les photos de la salle sont passées en WebP (1,4 Mo -> 115 Ko).
+ * Les lignes enregistrées avant la conversion pointent encore vers les
+ * .png : on les réécrit à la lecture, ce qui évite d'imposer une
+ * migration pour que la galerie continue de s'afficher. Ne touche que
+ * les chemins locaux, jamais les URL téléversées dans Supabase.
+ */
+function toWebp(url: string): string {
+  return url.startsWith("/photos/") ? url.replace(/\.png$/i, ".webp") : url;
+}
+
 const fallback: SiteContent = {
   settings: seedSettings,
   categories: seedCategories,
@@ -74,6 +85,9 @@ export async function getSiteContent(): Promise<SiteContent> {
     return {
       settings: {
         ...settings,
+        hero_image_url: settings.hero_image_url
+          ? toWebp(settings.hero_image_url)
+          : null,
         hours: Array.isArray(settings.hours) ? settings.hours : [],
         features: Array.isArray(settings.features) ? settings.features : [],
       },
@@ -92,7 +106,9 @@ export async function getSiteContent(): Promise<SiteContent> {
         : categories.length
           ? []
           : seedProducts,
-      gallery: gallery.length ? gallery : seedGallery,
+      gallery: gallery.length
+        ? gallery.map((g) => ({ ...g, url: toWebp(g.url) }))
+        : seedGallery,
       live: true,
     };
   } catch (error) {

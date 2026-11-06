@@ -60,7 +60,7 @@ export async function generateMetadata(): Promise<Metadata> {
       type: "website",
       locale: "fr_TN",
       siteName: name,
-      images: [{ url: settings.hero_image_url ?? "/photos/salle-3.png" }],
+      images: [{ url: settings.hero_image_url ?? "/photos/salle-3.webp" }],
     },
     twitter: { card: "summary_large_image", title, description },
     robots: { index: true, follow: true },
