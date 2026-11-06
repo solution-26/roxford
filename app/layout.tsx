@@ -3,12 +3,16 @@ import { Cormorant_Garamond, DM_Sans } from "next/font/google";
 import "./globals.css";
 import { getSiteContent } from "@/lib/data";
 
-// Serif claire, à l'aise en capitales très espacées : le titrage du lieu.
+/**
+ * Serif claire, à l'aise en capitales très espacées : le titrage du lieu.
+ * Trois graisses seulement, les seules employées — chaque graisse en plus
+ * est un fichier de plus à télécharger.
+ */
 const cormorant = Cormorant_Garamond({
   subsets: ["latin"],
   variable: "--font-cormorant",
   display: "swap",
-  weight: ["300", "400", "500", "600"],
+  weight: ["300", "400", "500"],
 });
 
 const dmSans = DM_Sans({

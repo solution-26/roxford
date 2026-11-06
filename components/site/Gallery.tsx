@@ -64,7 +64,7 @@ export function Gallery({ images }: { images: GalleryImage[] }) {
               Galerie
             </motion.p>
             <motion.h2
-              className="mt-5 font-display text-[clamp(2.2rem,5.5vw,3.6rem)] font-semibold leading-[1.05] tracking-[-0.03em] text-cream"
+              className="display mt-6 text-[clamp(1.9rem,4.6vw,3rem)] font-light text-cream"
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
